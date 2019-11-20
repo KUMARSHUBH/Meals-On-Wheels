@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MealsOnWheels</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_food">Food</string>
+    <string name="title_search">Search</string>
+    <string name="title_cart">Cart</string>
+    <string name="title_videos">Videos</string>
+    <string name="videos">Videos</string>
+
+    <string name="facebook_application_id" translatable="false">551614782318084</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb551614782318084</string>
+</resources>
