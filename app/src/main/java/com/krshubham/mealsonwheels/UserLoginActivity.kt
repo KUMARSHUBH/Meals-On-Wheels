@@ -10,15 +10,20 @@ import com.google.firebase.auth.FirebaseAuth
 
 class UserLoginActivity : AppCompatActivity() {
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_login)
+
+        auth = FirebaseAuth.getInstance()
 
         createSignInIntent()
     }
 
 
     private fun createSignInIntent() {
+
 
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
@@ -30,9 +35,21 @@ class UserLoginActivity : AppCompatActivity() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setTheme(R.style.AppTheme)
+                .setIsSmartLockEnabled(false)
+                .setTheme(R.style.LoginTheme)
+                .setLogo(R.drawable.logo)
                 .build(),
             RC_SIGN_IN)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val user = auth.currentUser
+        if(user != null){
+            startActivity(Intent(this, HomeActivity::class.java))
+        }
 
     }
 
