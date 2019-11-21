@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/orders"
+        android:title="@string/food_orders">
+
+   <menu>
+
+       <group>
+           <item android:id="@+id/order"
+               android:title="@string/your_order"
+               android:icon="@drawable/ic_package"
+               />
+           <item android:id="@+id/fav_order"
+               android:title="@string/favourite_order"
+               android:icon="@drawable/ic_fav"/>
+
+           <item android:id="@+id/add_bookmark"
+               android:title="@string/address_bookmark"
+               android:icon="@drawable/ic_add_book"/>
+           <item android:id="@+id/support"
+               android:title="@string/support"
+               android:icon="@drawable/ic_help"/>
+       </group>
+   </menu>
+    </item>
+
+
+    <item android:id="@+id/about"
+        android:title="@string/about">
+   <menu>
+       <group android:menuCategory="container">
+
+           <item android:id="@+id/feedback"
+               android:title="@string/send_feedback"/>
+
+           <item android:id="@+id/rate"
+               android:title="@string/rate_us"/>
+
+           <item android:id="@+id/log_out"
+               android:title="@string/log_out"/>
+       </group>
+   </menu>
+
+    </item>
+</menu>

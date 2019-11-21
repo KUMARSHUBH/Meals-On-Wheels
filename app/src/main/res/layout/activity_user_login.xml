@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserLoginActivity"
+    tools:context=".ui.userLogin.UserLoginActivity"
     android:background="@drawable/food_pic">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

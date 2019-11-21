@@ -7,24 +7,24 @@
 
     <fragment
         android:id="@+id/navigation_food"
-        android:name="com.krshubham.mealsonwheels.ui.Food.FoodFragment"
+        android:name="com.krshubham.mealsonwheels.ui.fragments.Food.FoodFragment"
         android:label="@string/title_food"
         tools:layout="@layout/fragment_food" />
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.krshubham.mealsonwheels.ui.search.SearchFragment"
+        android:name="com.krshubham.mealsonwheels.ui.fragments.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_cart"
-        android:name="com.krshubham.mealsonwheels.ui.cart.CartFragment"
+        android:name="com.krshubham.mealsonwheels.ui.fragments.cart.CartFragment"
         android:label="@string/title_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
         android:id="@+id/navigation_video"
-        android:name="com.krshubham.mealsonwheels.ui.videos.VideosFragment"
+        android:name="com.krshubham.mealsonwheels.ui.fragments.videos.VideosFragment"
         android:label="@string/title_videos"
         tools:layout="@layout/fragment_videos"/>
 </navigation>

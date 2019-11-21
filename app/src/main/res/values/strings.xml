@@ -9,4 +9,13 @@
 
     <string name="facebook_application_id" translatable="false">551614782318084</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb551614782318084</string>
+    <string name="food_orders">Food Orders</string>
+    <string name="your_order">Your order</string>
+    <string name="favourite_order">Favourite Order</string>
+    <string name="address_bookmark">Address Bookmark</string>
+    <string name="about">About</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="rate_us">Rate us</string>
+    <string name="log_out">Log Out</string>
+    <string name="support">Support</string>
 </resources>

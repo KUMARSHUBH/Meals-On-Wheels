@@ -1,9 +1,11 @@
-package com.krshubham.mealsonwheels
+package com.krshubham.mealsonwheels.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.krshubham.mealsonwheels.R
+import com.krshubham.mealsonwheels.ui.userLogin.UserLoginActivity
 
 class SplashScreenActivity : AppCompatActivity() {
 
