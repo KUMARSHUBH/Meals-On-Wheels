@@ -22,4 +22,6 @@
     <string name="below_text">We only access location wile you are using the app to improve your experience</string>
     <string name="set_your_location_to_start_exploring_restaurants_around_you">Set your location to start exploring restaurants around you</string>
     <string name="hi_nice_to_meet_you">Hi, nice to meet you!</string>
+
+    <string name="map_key" translatable="false">AIzaSyDPP1FWDDJ8I4Ny30klxksV1u_lUrhFMcI</string>
 </resources>

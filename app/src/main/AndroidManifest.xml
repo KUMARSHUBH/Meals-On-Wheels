@@ -4,7 +4,7 @@
     package="com.krshubham.mealsonwheels">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.UserLocationActivity"></activity>
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key"/>
+
+        <activity android:name=".ui.LocationDetail"></activity>
+        <activity android:name=".ui.UserLocationActivity" />
         <activity android:name=".ui.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +30,7 @@
         <activity
             android:name=".ui.HomeActivity"
             android:label="@string/title_activity_home" />
-        <activity android:name=".ui.userLogin.UserLoginActivity"></activity>
+        <activity android:name=".ui.userLogin.UserLoginActivity" />
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.krshubham.mealsonwheels.R
+import com.krshubham.mealsonwheels.R.layout.fragment_food
 
 class FoodFragment : Fragment() {
 
@@ -18,7 +18,9 @@ class FoodFragment : Fragment() {
     ): View? {
         foodViewModel =
             ViewModelProviders.of(this).get(FoodViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_food, container, false)
+        val root = inflater.inflate(fragment_food, container, false)
         return root
+
     }
+
 }
