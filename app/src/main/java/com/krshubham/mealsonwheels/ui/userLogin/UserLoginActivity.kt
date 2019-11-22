@@ -7,14 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.ui.HomeActivity
+import com.krshubham.mealsonwheels.ui.UserLocationActivity
 
 class UserLoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
+    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +25,7 @@ class UserLoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
-
+        databaseReference = firebaseDatabase.reference
 
         createSignInIntent()
     }
@@ -33,7 +36,8 @@ class UserLoginActivity : AppCompatActivity() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build(),
-            AuthUI.IdpConfig.FacebookBuilder().build())
+            AuthUI.IdpConfig.FacebookBuilder().build()
+        )
 
         // Create and launch sign-in intent
         startActivityForResult(
@@ -49,15 +53,6 @@ class UserLoginActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        val user = auth.currentUser
-        if(user != null){
-            startActivity(Intent(this, HomeActivity::class.java))
-        }
-
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -67,10 +62,18 @@ class UserLoginActivity : AppCompatActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
 
-                startActivity(Intent(this, HomeActivity::class.java))
+                if (response!!.isNewUser){
+                    startActivity(Intent(this, UserLocationActivity::class.java))
+                }
+
+                else{
+                    startActivity(Intent(this, HomeActivity::class.java))
+                }
 
 
+                // ...
             } else {
 
             }

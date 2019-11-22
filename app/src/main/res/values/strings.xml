@@ -18,4 +18,8 @@
     <string name="rate_us">Rate us</string>
     <string name="log_out">Log Out</string>
     <string name="support">Support</string>
+    <string name="set_your_location_manually">Set your location manually</string>
+    <string name="below_text">We only access location wile you are using the app to improve your experience</string>
+    <string name="set_your_location_to_start_exploring_restaurants_around_you">Set your location to start exploring restaurants around you</string>
+    <string name="hi_nice_to_meet_you">Hi, nice to meet you!</string>
 </resources>
