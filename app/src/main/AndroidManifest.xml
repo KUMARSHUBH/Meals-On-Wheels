@@ -18,7 +18,9 @@
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key"/>
 
-        <activity android:name=".ui.LocationDetail"></activity>
+        <activity
+            android:name=".ui.LocationDetail"
+            android:parentActivityName=".ui.UserLocationActivity" />
         <activity android:name=".ui.UserLocationActivity" />
         <activity android:name=".ui.SplashScreenActivity">
             <intent-filter>

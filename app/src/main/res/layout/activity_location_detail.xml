@@ -58,18 +58,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:textColor="@android:color/black"
                 android:text="Address"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/location_change"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="CHANGE"
-                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
 
@@ -107,7 +100,7 @@
             android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/confirm_location"
+            android:id="@+id/confirm_location_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
