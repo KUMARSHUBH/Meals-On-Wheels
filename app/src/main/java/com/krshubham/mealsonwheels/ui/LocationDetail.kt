@@ -79,8 +79,6 @@ class LocationDetail : AppCompatActivity() {
 
                     }
                 }
-
-
             })
         }
 

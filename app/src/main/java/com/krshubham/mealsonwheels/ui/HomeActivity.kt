@@ -26,8 +26,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.models.User
+import com.krshubham.mealsonwheels.ui.userLogin.UserLoginActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.bottom_sheet_search_location.*
+import kotlinx.android.synthetic.main.nav_header.*
 import java.util.*
 
 
@@ -39,7 +41,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var addresses: List<Address>
     private lateinit var databaseReference: DatabaseReference
     private lateinit var firebaseAuth: FirebaseAuth
-    private var user: User? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,22 +62,33 @@ class HomeActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        databaseReference = FirebaseDatabase.getInstance().getReference("user")
+        databaseReference =
+            FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
 
-        databaseReference.addValueEventListener(object : ValueEventListener {
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
-                Toast.makeText(this@HomeActivity,p0.details,Toast.LENGTH_LONG).show()
             }
 
             override fun onDataChange(p0: DataSnapshot) {
 
-                user = (p0.child(FirebaseAuth.getInstance().uid!!)).getValue(User::class.java)
+                val user = p0.getValue(User::class.java)
+                if (user != null) {
+                    location_text.text =
+                        geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
+
+                    username.text = user.name
+                    user_email.text = user.email
+
+
+                }
 
             }
 
-
         })
+
+
+
         nav_button.setOnClickListener {
 
             if (!drawer_layout.isDrawerOpen(GravityCompat.END))
@@ -104,7 +116,6 @@ class HomeActivity : AppCompatActivity() {
             }
         })
 
-        Toast.makeText(this@HomeActivity,user?.name,Toast.LENGTH_LONG).show()
 
         location_linear_layout.setOnClickListener {
 
@@ -135,7 +146,6 @@ class HomeActivity : AppCompatActivity() {
                     intent.putExtra("lat", lat)
                     intent.putExtra("lng", lng)
                     startActivity(intent)
-                    finish()
                 } else {
 
                     Toast.makeText(
@@ -155,6 +165,17 @@ class HomeActivity : AppCompatActivity() {
 
 
         })
+
+        nav.setNavigationItemSelectedListener {
+
+            if(it.itemId == R.id.log_out){
+
+                firebaseAuth.signOut()
+                startActivity(Intent(this, UserLoginActivity::class.java))
+            }
+            return@setNavigationItemSelectedListener true
+
+        }
 
 
     }
@@ -194,7 +215,6 @@ class HomeActivity : AppCompatActivity() {
                 intent.putExtra("lat", location.latitude)
                 intent.putExtra("lng", location.longitude)
                 startActivity(intent)
-                finish()
             }
 
 
@@ -228,7 +248,6 @@ class HomeActivity : AppCompatActivity() {
                         intent.putExtra("lat", location.latitude)
                         intent.putExtra("lng", location.longitude)
                         startActivity(intent)
-                        finish()
                     }
 
 

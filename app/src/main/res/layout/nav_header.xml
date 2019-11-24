@@ -20,6 +20,7 @@
         android:layout_gravity="center_vertical">
 
         <TextView
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="UserName"
@@ -28,9 +29,11 @@
             android:textColor="@android:color/black"/>
 
         <TextView
+            android:id="@+id/user_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="user@email.com"
+            android:maxLines="1"
             android:textSize="18sp"
             android:textStyle="normal"
             android:textColor="@android:color/black"/>
