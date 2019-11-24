@@ -19,8 +19,7 @@
             android:value="@string/map_key"/>
 
         <activity
-            android:name=".ui.LocationDetail"
-            android:parentActivityName=".ui.UserLocationActivity" />
+            android:name=".ui.LocationDetail"/>
         <activity android:name=".ui.UserLocationActivity" />
         <activity android:name=".ui.SplashScreenActivity">
             <intent-filter>

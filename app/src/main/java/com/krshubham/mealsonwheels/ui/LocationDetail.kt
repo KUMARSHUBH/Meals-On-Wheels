@@ -62,7 +62,9 @@ class LocationDetail : AppCompatActivity() {
 
 
                         databaseReference.child(firebaseAuth.currentUser!!.uid).updateChildren(mapOf("lat" to addresses[0].latitude, "lng" to addresses[0].longitude, "fullAddress" to complete_detail.text.toString(),"howToReach" to how_to_reach.text.toString()))
-                        startActivity(Intent(this@LocationDetail, HomeActivity::class.java))
+                        val intent = Intent(this@LocationDetail, HomeActivity::class.java)
+                        startActivity(intent)
+                        intent.putExtra("locality",addresses[0].subLocality)
                         finish()
 
                     }
@@ -70,7 +72,9 @@ class LocationDetail : AppCompatActivity() {
                         val user = User(firebaseAuth.currentUser!!.displayName!!, firebaseAuth.currentUser!!.email!!, addresses[0].latitude, addresses[0].longitude,complete_detail.text.toString(),how_to_reach.text.toString())
                         databaseReference.child(firebaseAuth.currentUser!!.uid).setValue(user)
 
-                        startActivity(Intent(this@LocationDetail, HomeActivity::class.java))
+                        val intent = Intent(this@LocationDetail, HomeActivity::class.java)
+                        startActivity(intent)
+                        intent.putExtra("locality",addresses[0].subLocality)
                         finish()
 
                     }
