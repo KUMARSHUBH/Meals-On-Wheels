@@ -4,11 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
+import com.krshubham.mealsonwheels.models.Category
 import com.krshubham.mealsonwheels.models.Restaurant
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.restaurant_layout.view.*
@@ -16,7 +17,8 @@ import kotlinx.android.synthetic.main.text_layout.view.*
 
 class RestaurantViewAdapter(
     private val context: Context,
-    private val restaurantList: List<Restaurant>?
+    private val restaurantList: List<Restaurant>?,
+    private val categoryList: List<Category>?
 ) : RecyclerView.Adapter<RestaurantViewAdapter.ViewHolder>() {
 
 
@@ -33,7 +35,7 @@ class RestaurantViewAdapter(
         //        var resCategories: TextView
         var resPerPersonCost: TextView? = view.restaurant_per_person_cost
         var resRating: TextView? = view.rating
-        var text:EditText? = view.text
+        var cat : RecyclerView? = view.category_recycler_view
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -60,9 +62,15 @@ class RestaurantViewAdapter(
             holder.resRating?.text = restaurantList?.get(position)?.rating.toString()
             Picasso.get().load(restaurantList?.get(position)?.image.toString())
                 .into(holder.resImage)
-            holder.text = null
+            holder.resImage?.clipToOutline = true
+            holder.cat = null
         }
 
+        else{
+
+            holder.cat?.adapter = CategoryViewAdapter(context,categoryList)
+            holder.cat?.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        }
 
     }
 

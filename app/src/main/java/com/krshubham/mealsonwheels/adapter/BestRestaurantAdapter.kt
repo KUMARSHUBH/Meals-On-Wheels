@@ -9,12 +9,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
-import com.krshubham.mealsonwheels.models.BestRestaurant
+import com.krshubham.mealsonwheels.models.Restaurant
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.square_restaurant_layout.view.*
 
 class BestRestaurantAdapter(val context: Context,
-                            private val bestRestaurantList: List<BestRestaurant>?) : RecyclerView.Adapter<BestRestaurantAdapter.ViewHolder>() {
+                            private val bestRestaurantList: List<Restaurant>?) : RecyclerView.Adapter<BestRestaurantAdapter.ViewHolder>() {
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){

@@ -36,5 +36,6 @@ class CategoryViewAdapter(
 
         holder.catName.text = categoryList?.get(position)?.name
         Picasso.get().load(categoryList?.get(position)?.image).into(holder.catImage)
+        holder.catImage.clipToOutline= true
     }
 }

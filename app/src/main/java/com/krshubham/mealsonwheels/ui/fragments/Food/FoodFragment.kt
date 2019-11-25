@@ -121,7 +121,7 @@ class FoodFragment : Fragment() {
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         restaurant_recycler_view.setHasFixedSize(true)
 
-        restaurantViewAdapter = RestaurantViewAdapter(this.context!!, restaurantlist)
+        restaurantViewAdapter = RestaurantViewAdapter(this.context!!, restaurantlist, categoryList)
         categoryViewAdapter = CategoryViewAdapter(this.context!!, categoryList)
 
         restaurant_recycler_view.adapter = restaurantViewAdapter

@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#F3F3F3"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    >
 
-    <EditText
-        android:id="@+id/text"
+    <TextView
+        android:id="@+id/cat_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="CATEGORIES"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:padding="4dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/category_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sed diam eget enim bibendum luctus. Nulla gravida ipsum vel turpis tristique congue. Nullam at dolor congue tellus maximus aliquet faucibus posuere erat. Suspendisse pharetra aliquam semper. Aliquam mattis arcu nec nisl pulvinar, vel varius lorem rhoncus. Aliquam mollis magna posuere pharetra fringilla. Nam fermentum eu enim nec semper. Nunc interdum tortor nec consequat accumsan. Nulla velit neque, sollicitudin et ex sit amet, cursus facilisis nulla." />
-</androidx.core.widget.NestedScrollView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cat_title" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
