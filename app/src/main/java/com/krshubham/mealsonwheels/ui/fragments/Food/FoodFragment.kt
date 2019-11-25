@@ -103,8 +103,6 @@ class FoodFragment : Fragment() {
 
         })
 
-
-
         foodViewModel =
             ViewModelProviders.of(this).get(FoodViewModel::class.java)
         return view
@@ -129,7 +127,7 @@ class FoodFragment : Fragment() {
         restaurant_recycler_view.adapter = restaurantViewAdapter
         category_recycler_view.adapter = categoryViewAdapter
 
-        restaurant_recycler_view.isNestedScrollingEnabled = false
+        restaurant_recycler_view.isNestedScrollingEnabled = true
 
 
     }
