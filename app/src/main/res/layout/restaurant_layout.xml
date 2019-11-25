@@ -4,6 +4,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="0dp"
     android:padding="8dp">
 
 
@@ -17,7 +18,7 @@
         app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal" />
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
+        android:id="@+id/restaurant_details"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -36,11 +37,11 @@
             android:textSize="21dp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/restaurant_categories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Categories" />
+<!--        <TextView-->
+<!--            android:id="@+id/restaurant_categories"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Categories" />-->
 
         <TextView
             android:id="@+id/restaurant_per_person_cost"
@@ -60,9 +61,9 @@
         android:padding="2dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
+        app:layout_constraintBottom_toBottomOf="@+id/restaurant_details"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4"
+        app:layout_constraintTop_toTopOf="@+id/restaurant_details"
         app:layout_constraintVertical_bias="0.0" />
 
 
