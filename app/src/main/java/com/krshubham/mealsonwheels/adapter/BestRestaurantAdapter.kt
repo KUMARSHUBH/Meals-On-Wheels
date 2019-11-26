@@ -35,6 +35,7 @@ class BestRestaurantAdapter(val context: Context,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         Picasso.get().load(bestRestaurantList?.get(position)?.image).into(holder.image)
+        holder.image.clipToOutline = true
         holder.name.text = bestRestaurantList?.get(position)?.name
     }
 }

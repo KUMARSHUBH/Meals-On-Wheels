@@ -12,7 +12,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.krshubham.mealsonwheels.R.layout.fragment_food
-import com.krshubham.mealsonwheels.adapter.CategoryViewAdapter
+import com.krshubham.mealsonwheels.adapter.BestRestaurantAdapter
 import com.krshubham.mealsonwheels.adapter.RestaurantViewAdapter
 import com.krshubham.mealsonwheels.models.Category
 import com.krshubham.mealsonwheels.models.Restaurant
@@ -23,7 +23,8 @@ class FoodFragment : Fragment() {
     private lateinit var foodViewModel: FoodViewModel
 
     private lateinit var restaurantViewAdapter: RestaurantViewAdapter
-    private lateinit var categoryViewAdapter: CategoryViewAdapter
+//    private lateinit var categoryViewAdapter: CategoryViewAdapter
+    private lateinit var bestRestaurantAdapter: BestRestaurantAdapter
 
     companion object {
 
@@ -70,6 +71,7 @@ class FoodFragment : Fragment() {
                 }
 
                 restaurantViewAdapter.notifyDataSetChanged()
+                bestRestaurantAdapter.notifyDataSetChanged()
 
             }
 
@@ -97,7 +99,7 @@ class FoodFragment : Fragment() {
                 }
 
 
-                categoryViewAdapter.notifyDataSetChanged()
+//                categoryViewAdapter.notifyDataSetChanged()
             }
 
 
@@ -113,19 +115,20 @@ class FoodFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        category_recycler_view.layoutManager =
+        best_restaurant_recycler_view.layoutManager =
             LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
-        category_recycler_view.setHasFixedSize(true)
+        best_restaurant_recycler_view.setHasFixedSize(true)
 
         restaurant_recycler_view.layoutManager =
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         restaurant_recycler_view.setHasFixedSize(true)
 
         restaurantViewAdapter = RestaurantViewAdapter(this.context!!, restaurantlist, categoryList)
-        categoryViewAdapter = CategoryViewAdapter(this.context!!, categoryList)
+//        categoryViewAdapter = CategoryViewAdapter(this.context!!, categoryList)
+        bestRestaurantAdapter = BestRestaurantAdapter(this.context!!, restaurantlist)
 
         restaurant_recycler_view.adapter = restaurantViewAdapter
-        category_recycler_view.adapter = categoryViewAdapter
+        best_restaurant_recycler_view.adapter = bestRestaurantAdapter
 
         restaurant_recycler_view.isNestedScrollingEnabled = true
 

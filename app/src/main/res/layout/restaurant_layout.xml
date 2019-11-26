@@ -6,15 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="0dp"
-    android:padding="4dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
 
 
     <ImageView
         android:id="@+id/restaurant_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:scaleType="centerCrop"
         android:background="@drawable/images_background"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,6 +29,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:orientation="vertical"
+        android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/restaurant_image"
         app:layout_constraintEnd_toStartOf="@+id/rating"
         app:layout_constraintStart_toEndOf="@+id/restaurant_image"
@@ -39,20 +41,22 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:text="Name"
+            android:background="@android:color/white"
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:textStyle="bold" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/restaurant_categories"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Categories" />-->
+        <TextView
+            android:id="@+id/restaurant_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="North Indian, Chinese, South Indian" />
 
         <TextView
             android:id="@+id/restaurant_per_person_cost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             android:textColor="#D4FF5722"
             android:text="$100 per person" />
     </LinearLayout>

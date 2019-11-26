@@ -3,23 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
+    android:background="@android:color/white"
     android:layout_marginBottom="?attr/actionBarSize">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:descendantFocusability="blocksDescendants"
             android:layout_width="match_parent"
+            android:background="@android:color/white"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/category_recycler_view"
+                android:id="@+id/best_restaurant_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"/>
 
             <com.krshubham.mealsonwheels.utils.NestedRecyclerView
                 android:background="@android:color/white"
