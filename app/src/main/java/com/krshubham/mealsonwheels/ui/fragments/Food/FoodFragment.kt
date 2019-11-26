@@ -13,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.krshubham.mealsonwheels.R.layout.fragment_food
 import com.krshubham.mealsonwheels.adapter.BestRestaurantAdapter
+import com.krshubham.mealsonwheels.adapter.CategoryViewAdapter
+import com.krshubham.mealsonwheels.adapter.OptionsAdapter
 import com.krshubham.mealsonwheels.adapter.RestaurantViewAdapter
 import com.krshubham.mealsonwheels.models.Category
 import com.krshubham.mealsonwheels.models.Restaurant
@@ -23,13 +25,15 @@ class FoodFragment : Fragment() {
     private lateinit var foodViewModel: FoodViewModel
 
     private lateinit var restaurantViewAdapter: RestaurantViewAdapter
-//    private lateinit var categoryViewAdapter: CategoryViewAdapter
+    private lateinit var categoryViewAdapter: CategoryViewAdapter
     private lateinit var bestRestaurantAdapter: BestRestaurantAdapter
+    private lateinit var optionsAdapter: OptionsAdapter
 
     companion object {
 
         lateinit var restaurantlist: ArrayList<Restaurant>
         lateinit var categoryList: ArrayList<Category>
+        lateinit var optionsList: List<String>
 
     }
 
@@ -47,6 +51,8 @@ class FoodFragment : Fragment() {
 
         categoryList = ArrayList()
         restaurantlist = ArrayList()
+        optionsList = listOf("Filters","Sort By","Pure Veg Places","Rating: 4.0+", "Great Offers", "Express Delivery")
+
 
         restaurantReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -98,8 +104,6 @@ class FoodFragment : Fragment() {
                     categoryList.add(category)
                 }
 
-
-//                categoryViewAdapter.notifyDataSetChanged()
             }
 
 
@@ -123,12 +127,20 @@ class FoodFragment : Fragment() {
             LinearLayoutManager(this.context, LinearLayoutManager.VERTICAL, false)
         restaurant_recycler_view.setHasFixedSize(true)
 
+        option_recycler_view.layoutManager =
+            LinearLayoutManager(this.context, LinearLayoutManager.HORIZONTAL, false)
+        option_recycler_view.setHasFixedSize(true)
+
         restaurantViewAdapter = RestaurantViewAdapter(this.context!!, restaurantlist, categoryList)
-//        categoryViewAdapter = CategoryViewAdapter(this.context!!, categoryList)
+        categoryViewAdapter = CategoryViewAdapter(this.context!!, categoryList)
         bestRestaurantAdapter = BestRestaurantAdapter(this.context!!, restaurantlist)
+        optionsAdapter = OptionsAdapter(this.context!!, optionsList)
 
         restaurant_recycler_view.adapter = restaurantViewAdapter
         best_restaurant_recycler_view.adapter = bestRestaurantAdapter
+        option_recycler_view.adapter = optionsAdapter
+
+        optionsAdapter.notifyDataSetChanged()
 
         restaurant_recycler_view.isNestedScrollingEnabled = true
 

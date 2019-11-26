@@ -14,6 +14,7 @@ import com.krshubham.mealsonwheels.models.Restaurant
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.restaurant_layout.view.*
 import kotlinx.android.synthetic.main.text_layout.view.*
+import kotlin.random.Random
 
 class RestaurantViewAdapter(
     private val context: Context,
@@ -21,6 +22,7 @@ class RestaurantViewAdapter(
     private val categoryList: List<Category>?
 ) : RecyclerView.Adapter<RestaurantViewAdapter.ViewHolder>() {
 
+    val pos = Random.nextInt(4,10)
 
     private object ItemType {
 
@@ -56,7 +58,7 @@ class RestaurantViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        if (position != 2) {
+        if (position != pos) {
 
             holder.resName?.text = restaurantList?.get(position)?.name.toString()
             holder.resRating?.text = restaurantList?.get(position)?.rating.toString()
@@ -76,7 +78,7 @@ class RestaurantViewAdapter(
 
     override fun getItemViewType(position: Int): Int {
 
-        return if (position == 2) ItemType.input else ItemType.restaurant
+        return if (position == pos) ItemType.input else ItemType.restaurant
     }
 
 
