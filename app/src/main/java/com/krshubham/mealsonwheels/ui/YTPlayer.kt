@@ -13,6 +13,7 @@ class YTPlayer : YouTubeBaseActivity() {
 
     private lateinit var listener: YouTubePlayer.OnInitializedListener
     private lateinit var ytPlayerView : YouTubePlayerView
+    internal lateinit var id: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +27,18 @@ class YTPlayer : YouTubeBaseActivity() {
         ytPlayerView = youtube_player
 
 
-        listener = YtListener()
+        id = intent?.getStringExtra("videoId")!!
+        listener = YtListener(id)
         ytPlayerView.initialize(getString(R.string.google_api_key), listener)
+
+        video_title.text = intent?.getStringExtra("title")
+        video_description.text = intent?.getStringExtra("desc")
+
+
     }
 
 
-    class YtListener : YouTubePlayer.OnInitializedListener{
+    class YtListener(val id: String) : YouTubePlayer.OnInitializedListener{
 
         override fun onInitializationSuccess(
             p0: YouTubePlayer.Provider?,
@@ -39,8 +46,7 @@ class YTPlayer : YouTubeBaseActivity() {
             p2: Boolean
         ) {
 
-            val list = listOf("W4hTJybfU7s","3LiubyYpEUk")
-            p1?.loadVideos(list)
+            p1?.loadVideo(id)
 
         }
 

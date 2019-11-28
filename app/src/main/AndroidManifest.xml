@@ -14,8 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".ui.YTPlayer"/>
+        <activity android:name=".ui.RestaurantDetail"></activity>
+        <activity android:name=".ui.YTPlayer" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

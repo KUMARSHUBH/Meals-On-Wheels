@@ -16,5 +16,15 @@
         <item name="android:windowBackground">@drawable/food_pic</item>
     </style>
 
+    <style name="ExpandTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
+    <style name="CollapseTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

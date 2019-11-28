@@ -1,6 +1,7 @@
 package com.krshubham.mealsonwheels.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.models.Category
 import com.krshubham.mealsonwheels.models.Restaurant
+import com.krshubham.mealsonwheels.ui.RestaurantDetail
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.restaurant_layout.view.*
 import kotlinx.android.synthetic.main.text_layout.view.*
@@ -22,7 +24,7 @@ class RestaurantViewAdapter(
     private val categoryList: List<Category>?
 ) : RecyclerView.Adapter<RestaurantViewAdapter.ViewHolder>() {
 
-    val pos = Random.nextInt(4,10)
+    val pos = Random.nextInt(4,8)
 
     private object ItemType {
 
@@ -66,6 +68,12 @@ class RestaurantViewAdapter(
                 .into(holder.resImage)
             holder.resImage?.clipToOutline = true
             holder.cat = null
+
+
+            holder.resName?.setOnClickListener {
+
+                context.startActivity(Intent(context,RestaurantDetail::class.java))
+            }
         }
 
         else{
