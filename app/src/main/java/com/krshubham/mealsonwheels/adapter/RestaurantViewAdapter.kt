@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.models.Category
 import com.krshubham.mealsonwheels.models.Restaurant
-import com.krshubham.mealsonwheels.ui.RestaurantDetail
+import com.krshubham.mealsonwheels.ui.RestaurantDetailActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.restaurant_layout.view.*
 import kotlinx.android.synthetic.main.text_layout.view.*
@@ -72,7 +72,13 @@ class RestaurantViewAdapter(
 
             holder.resName?.setOnClickListener {
 
-                context.startActivity(Intent(context,RestaurantDetail::class.java))
+                val intent = Intent(context,RestaurantDetailActivity::class.java)
+                intent.putExtra("id",restaurantList?.get(position)?.id.toString())
+                intent.putExtra("name",restaurantList?.get(position)?.name.toString())
+                intent.putExtra("phone",restaurantList?.get(position)?.phone.toString())
+                intent.putExtra("image",restaurantList?.get(position)?.image.toString())
+                intent.putExtra("rating",restaurantList?.get(position)?.rating.toString())
+                context.startActivity(intent)
             }
         }
 

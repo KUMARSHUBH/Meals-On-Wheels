@@ -1,91 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.RestaurantDetail">
+    android:fitsSystemWindows="true"
+    tools:context="com.krshubham.mealsonwheels.ui.RestaurantDetailActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbarlayout_id"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="match_parent"
+        tools:context=".ui.RestaurantDetailActivity">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingtoolbar_id"
+        <ImageView
+            android:id="@+id/toolbar_background"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:collapsedTitleTextAppearance="@style/CollapseTitle"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginBottom="180dp"
-            app:expandedTitleTextAppearance="@style/ExpandTitle"
-            app:layout_scrollFlags="exitUntilCollapsed|scroll"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:elevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            >
-
-            <FrameLayout
-                android:id="@+id/main.framelayout.title"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+
+                />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.amar.library.ui.StickyScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/layout_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingEnd="32dp"
-                    android:paddingStart="32dp">
-
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
 
                     <TextView
-                        android:id="@+id/address_detail"
-                        android:layout_width="0dp"
+                        android:id="@+id/name_detail"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="8dp"
-                        android:lines="2"
-                        android:text="Maa Saraswati Apartment, Mandelia nagar, Bariatu Road, Ranchi"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
+                        android:layout_marginBottom="4dp"
+                        android:fontFamily="sans-serif"
+                        android:text="Second Wife Restaurant"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toTopOf="@+id/category_detail"
+                        app:layout_constraintBottom_toTopOf="@+id/category_details"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.09"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
-                        android:id="@+id/category_detail"
+                        android:id="@+id/category_details"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginEnd="4dp"
+                        android:lines="2"
                         android:text="North Indian, Chinese, South Indian, Burgers"
-                        android:textColor="@android:color/white"
+                        android:textColor="#5C0A04"
                         android:textSize="16sp"
+                        android:textStyle="italic"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/address_detail"
-                        app:layout_constraintStart_toStartOf="@+id/address_detail" />
+                        app:layout_constraintEnd_toStartOf="@+id/rating_detail"
+                        app:layout_constraintStart_toStartOf="@+id/name_detail" />
 
+                    <TextView
+                        android:id="@+id/rating_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/rating_background"
+                        android:padding="4dp"
+                        android:text="4.0"
+                        android:textColor="@android:color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/name_detail"
+                        app:layout_constraintVertical_bias="0.18" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            </FrameLayout>
-
-
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black" />
 
 
-    </com.google.android.material.appbar.AppBarLayout>
+                <TextView
+                    android:id="@+id/heading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="North Indian" />
+
+                <com.krshubham.mealsonwheels.utils.NestedRecyclerView
+                    android:id="@+id/restaurant_detail_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/layout_background"
-        android:padding="16dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            </LinearLayout>
+        </com.amar.library.ui.StickyScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="32dp"
+        android:src="@drawable/ic_food_24dp"
+        android:background="@android:color/white"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

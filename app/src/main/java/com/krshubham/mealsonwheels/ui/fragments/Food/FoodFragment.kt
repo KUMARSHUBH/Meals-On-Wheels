@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_food.*
 class FoodFragment : Fragment() {
 
     private lateinit var foodViewModel: FoodViewModel
-
     private lateinit var restaurantViewAdapter: RestaurantViewAdapter
     private lateinit var categoryViewAdapter: CategoryViewAdapter
     private lateinit var bestRestaurantAdapter: BestRestaurantAdapter
@@ -34,7 +33,6 @@ class FoodFragment : Fragment() {
         lateinit var restaurantlist: ArrayList<Restaurant>
         lateinit var categoryList: ArrayList<Category>
         lateinit var optionsList: List<String>
-
     }
 
     override fun onCreateView(
@@ -51,7 +49,14 @@ class FoodFragment : Fragment() {
 
         categoryList = ArrayList()
         restaurantlist = ArrayList()
-        optionsList = listOf("Filters","Sort By","Pure Veg Places","Rating: 4.0+", "Great Offers", "Express Delivery")
+        optionsList = listOf(
+            "Filters",
+            "Sort By",
+            "Pure Veg Places",
+            "Rating: 4.0+",
+            "Great Offers",
+            "Express Delivery"
+        )
 
 
         restaurantReference.addValueEventListener(object : ValueEventListener {
@@ -67,9 +72,11 @@ class FoodFragment : Fragment() {
                     val restaurant = Restaurant()
                     restaurant.apply {
 
+                        id = ds.child("id").getValue(true).toString()
                         name = ds.child("name").getValue(true).toString()
                         rating = ds.child("rating").getValue(true).toString()
                         image = ds.child("image").getValue(true).toString()
+                        phone = ds.child("phone").getValue(true).toString()
 
                     }
                     restaurantlist.add(restaurant)
