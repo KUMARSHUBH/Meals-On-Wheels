@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
@@ -40,6 +41,7 @@ class RestaurantViewAdapter(
         var resPerPersonCost: TextView? = view.restaurant_per_person_cost
         var resRating: TextView? = view.rating
         var cat : RecyclerView? = view.category_recycler_view
+        var root: ConstraintLayout? = view.root
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -70,7 +72,7 @@ class RestaurantViewAdapter(
             holder.cat = null
 
 
-            holder.resName?.setOnClickListener {
+            holder.root?.setOnClickListener {
 
                 val intent = Intent(context,RestaurantDetailActivity::class.java)
                 intent.putExtra("id",restaurantList?.get(position)?.id.toString())

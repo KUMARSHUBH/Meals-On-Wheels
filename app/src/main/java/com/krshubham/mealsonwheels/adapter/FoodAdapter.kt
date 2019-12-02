@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
@@ -19,7 +20,7 @@ class FoodAdapter(val context: Context, val foodList: List<Food>?) : RecyclerVie
 
         var name: TextView? = view.food_title
         var price: TextView? = view.food_price
-        var rating: TextView? = view.food_rating
+        var rating: RatingBar? = view.food_rating
         var image: ImageView? = view.food_image
     }
 
@@ -40,6 +41,7 @@ class FoodAdapter(val context: Context, val foodList: List<Food>?) : RecyclerVie
         holder.name?.text =foodList?.get(position)?.name
         val a = "$ ${foodList?.get(position)?.price}"
         holder.price?.text = a
-        holder.rating?.text = foodList?.get(position)?.price
+        holder.rating?.rating = foodList?.get(position)?.rating?.toFloat()!!
+
     }
 }
