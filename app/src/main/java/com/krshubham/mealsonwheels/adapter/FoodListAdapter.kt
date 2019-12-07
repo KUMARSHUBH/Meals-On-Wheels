@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.food_item_layout.view.*
 class FoodListAdapter(val context: Context, val list: List<Any>?) :
     RecyclerView.Adapter<FoodListAdapter.ViewHolder>() {
 
-    private object ItemType {
+    object ItemType {
 
         val category = 1
         val food = 2
@@ -58,6 +58,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
             holder.name?.text = (list[position] as Food).name
             holder.rating?.rating = (list[position] as Food).rating.toFloat()
             holder.price?.text = (list[position] as Food).price
+            holder.image?.clipToOutline = true
         }
 
         else if(getItemViewType(position) == ItemType.category){

@@ -104,7 +104,7 @@ class FoodFragment : Fragment() {
                     val category = Category()
                     category.apply {
 
-                        name = ds.child("name").getValue(true).toString()
+                        name = ds.child("aaaaa").getValue(true).toString()
                         image = ds.child("image").getValue(true).toString()
 
                     }

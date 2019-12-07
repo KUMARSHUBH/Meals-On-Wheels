@@ -1,12 +1,15 @@
 package com.krshubham.mealsonwheels.ui
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.konifar.fab_transformation.FabTransformation
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.adapter.FoodListAdapter
 import com.krshubham.mealsonwheels.models.Food
@@ -34,12 +37,34 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
         Picasso.get().load(resImage).into(toolbar_background)
 
+        fab.setOnClickListener {
+
+            if (fab.visibility == View.VISIBLE) {
+                FabTransformation.with(fab)
+                    .duration(200).setOverlay(overlay).transformTo(card)
+            }
+        }
+
+        overlay.setOnClickListener {
+
+            if (fab.visibility != View.VISIBLE) {
+                FabTransformation.with(fab).setOverlay(overlay)
+                    .duration(200).transformFrom(card)
+            }
+        }
+
+        t1.setOnClickListener {
+            Toast.makeText(this,"T1 pressed", Toast.LENGTH_LONG).show()
+        }
+
+        t2.setOnClickListener {
+            Toast.makeText(this,"T2 pressed", Toast.LENGTH_LONG).show()
+        }
 //        foodAdapter = FoodAdapter(this, foods)
         foodListAdapter = FoodListAdapter(this, foods)
         restaurant_detail_recycler_view.adapter = foodListAdapter
         restaurant_detail_recycler_view.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
 
 //        foodAdapter.notifyDataSetChanged()
 
@@ -77,11 +102,6 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
                                 for (p1: DataSnapshot in p.children) {
 
-//                                    if(p1.key!! == "name")
-//                                        foods.add(p.child("name").value.toString())
-
-//                                    foodListAdapter.notifyDataSetChanged()
-
                                     if (p1.key!! != "aaaaa" || p1.key!! != "image") {
 
                                         foodReference.addListenerForSingleValueEvent(object :
@@ -92,7 +112,7 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
                                             override fun onDataChange(p0: DataSnapshot) {
 
-                                                if(p1.key!! == "aaaaa")
+                                                if (p1.key!! == "aaaaa")
                                                     foods.add(p.child("aaaaa").value.toString())
                                                 for (p2: DataSnapshot in p0.children) {
 
@@ -119,7 +139,6 @@ class RestaurantDetailActivity : AppCompatActivity() {
                                                 }
 
 
-
                                             }
                                         })
                                     }
@@ -128,7 +147,6 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
                         }
 
-//                        foodListAdapter.notifyDataSetChanged()
 
                     }
 
@@ -143,5 +161,7 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
 
     }
+
+
 
 }
