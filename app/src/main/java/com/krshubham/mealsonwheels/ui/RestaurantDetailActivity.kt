@@ -3,14 +3,13 @@ package com.krshubham.mealsonwheels.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.konifar.fab_transformation.FabTransformation
+import com.krshubham.mealsonwheels.BottomSheetFragment
 import com.krshubham.mealsonwheels.OrderActivity
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.adapter.FoodListAdapter
@@ -20,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_restaurant_detail.*
 
 class RestaurantDetailActivity : AppCompatActivity() {
 
-    //    private lateinit var foodAdapter: FoodAdapter
     private lateinit var foodListAdapter: FoodListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,42 +35,52 @@ class RestaurantDetailActivity : AppCompatActivity() {
         name_detail.text = resName
         rating_detail.text = resRating
 
+
+        view_cart.setOnClickListener {
+
+            val bottomSheetFragment = BottomSheetFragment()
+            bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
+        }
+
         Picasso.get().load(resImage).into(toolbar_background)
 
-        fab.setOnClickListener {
-
-            if (fab.visibility == View.VISIBLE) {
-                FabTransformation.with(fab)
-                    .duration(200).setOverlay(overlay).transformTo(card)
-            }
-        }
+//        fab.setOnClickListener {
+//
+//            if (fab.visibility == View.VISIBLE) {
+//                FabTransformation.with(fab)
+//                    .duration(200).setOverlay(overlay).transformTo(card)
+//            }
+//        }
 
         rating_detail.setOnClickListener {
 
             startActivity(Intent(this, OrderActivity::class.java))
         }
-        overlay.setOnClickListener {
-
-            if (fab.visibility != View.VISIBLE) {
-                FabTransformation.with(fab).setOverlay(overlay)
-                    .duration(200).transformFrom(card)
-            }
-        }
-
-        t1.setOnClickListener {
-            Toast.makeText(this, "T1 pressed", Toast.LENGTH_LONG).show()
-        }
-
-        t2.setOnClickListener {
-            Toast.makeText(this, "T2 pressed", Toast.LENGTH_LONG).show()
-        }
+//        overlay.setOnClickListener {
+//
+//            if (fab.visibility != View.VISIBLE) {
+//                FabTransformation.with(fab).setOverlay(overlay)
+//                    .duration(200).transformFrom(card)
+//            }
+//        }
+//
+//        t1.setOnClickListener {
+//            Toast.makeText(this, "T1 pressed", Toast.LENGTH_LONG).show()
+//        }
+//
+//        t2.setOnClickListener {
+//            Toast.makeText(this, "T2 pressed", Toast.LENGTH_LONG).show()
+//        }
 //        foodAdapter = FoodAdapter(this, foods)
         foodListAdapter = FoodListAdapter(this, foods)
         restaurant_detail_recycler_view.adapter = foodListAdapter
         restaurant_detail_recycler_view.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-//        foodAdapter.notifyDataSetChanged()
+        rating_detail.setOnClickListener {
+
+            bottom_app_bar.visibility = View.VISIBLE
+        }
 
         val resCategoryReference =
             FirebaseDatabase.getInstance().getReference("restaurantCategories")

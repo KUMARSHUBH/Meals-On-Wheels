@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:id="@+id/root"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -127,112 +126,182 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <View
-        android:id="@+id/overlay"
+    <!--    <View-->
+    <!--        android:id="@+id/overlay"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:background="#4D000000"-->
+    <!--        android:clickable="true"-->
+    <!--        android:visibility="gone"-->
+    <!--        android:focusable="true" />-->
+
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+
+    <!--        <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent">-->
+
+
+    <!--        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
+    <!--            android:id="@+id/fab"-->
+    <!--            android:layout_width="80dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginEnd="32dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            app:elevation="8dp"-->
+    <!--            android:text="Menu"-->
+    <!--            app:layout_anchor="@id/bottom_app_bar"-->
+    <!--            app:layout_anchorGravity="end"-->
+    <!--            android:clickable="true"-->
+    <!--            android:backgroundTint="@android:color/white"-->
+    <!--            android:textColor="#6A7BEF"-->
+    <!--            android:focusable="true" />-->
+
+    <!--        <io.codetail.widget.RevealFrameLayout-->
+    <!--            android:layout_width="280dp"-->
+    <!--            android:layout_marginEnd="32dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            -->
+    <!--            android:layout_alignParentEnd="true">-->
+
+    <!--            <com.google.android.material.card.MaterialCardView-->
+    <!--                android:id="@+id/card"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="match_parent"-->
+    <!--                android:visibility="invisible">-->
+
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:orientation="vertical"-->
+    <!--                    android:padding="8dp">-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/t1"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:text="Test ELeMnn"-->
+    <!--                        android:layout_margin="8dp"-->
+    <!--                        android:padding="8dp"/>-->
+
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/t2"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:text="Test ELeMnn"-->
+    <!--                        android:layout_margin="8dp"-->
+    <!--                        android:padding="8dp"/>-->
+
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:text="Test ELeMnn"-->
+    <!--                        android:layout_margin="8dp"-->
+    <!--                        android:padding="8dp"/>-->
+
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:text="Test ELeMnn"-->
+    <!--                        android:layout_margin="8dp"-->
+    <!--                        android:padding="8dp"/>-->
+
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:text="Test ELeMnn"-->
+    <!--                        android:layout_margin="8dp"-->
+    <!--                        android:padding="8dp"/>-->
+
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:text="Test ELeMnn"-->
+    <!--                        android:layout_margin="8dp"/>-->
+    <!--                </LinearLayout>-->
+    <!--            </com.google.android.material.card.MaterialCardView>-->
+
+    <!--        </io.codetail.widget.RevealFrameLayout>-->
+
+
+    <!--        </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
+    <!--    </RelativeLayout>-->
+
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#4D000000"
-        android:clickable="true"
-        android:visibility="gone"
-        android:focusable="true" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:padding="8dp"
+        app:fabAlignmentMode="end"
+        android:elevation="8dp"
+        app:fabCradleMargin="2dp"
+        app:fabCradleRoundedCornerRadius="5dp"
+        app:fabCradleVerticalOffset="2dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-
-        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="80dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginTop="8dp"
-            app:elevation="8dp"
-            android:text="Menu"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:backgroundTint="@android:color/white"
-            android:textColor="#6A7BEF"
-            android:focusable="true" />
+            android:background="@drawable/bottom_app_bar_background"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="10">
 
-        <io.codetail.widget.RevealFrameLayout
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/fab"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="32dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 ITEM"
+                    android:textColor="@android:color/white" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$50 plus taxes"
+                    android:textColor="@android:color/white" />
 
-                    <TextView
-                        android:id="@+id/t1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Test ELeMnn"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"/>
+            </LinearLayout>
 
 
-                    <TextView
-                        android:id="@+id/t2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Test ELeMnn"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/view_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VIEW CART"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_play_arrow_white_24dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Test ELeMnn"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"/>
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Test ELeMnn"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"/>
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Test ELeMnn"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"/>
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Test ELeMnn"
-                        android:layout_margin="8dp"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-
-        </io.codetail.widget.RevealFrameLayout>
-    </RelativeLayout>
-
-
+    <include layout="@layout/cart_bottom_sheet"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

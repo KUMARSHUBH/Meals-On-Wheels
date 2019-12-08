@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="0dp"
-    android:background="@android:color/white"
+    android:background="#F4E1E8"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     android:padding="16dp">
@@ -67,7 +67,7 @@
             </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/add_or_remove"
+    <LinearLayout android:id="@+id/add_or_remove_per_item"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:background="@drawable/background_fab"
@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:text="Name"
-            android:background="@android:color/white"
+            android:background="#F4E1E8"
             android:textColor="@android:color/black"
             android:textSize="18dp"
             android:textStyle="bold" />
@@ -156,7 +156,7 @@
             android:id="@+id/food_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+            android:background="#F4E1E8"
             android:textColor="@android:color/black"
             android:text="$100" />
 
