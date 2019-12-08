@@ -1,5 +1,6 @@
 package com.krshubham.mealsonwheels.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -10,6 +11,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.konifar.fab_transformation.FabTransformation
+import com.krshubham.mealsonwheels.OrderActivity
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.adapter.FoodListAdapter
 import com.krshubham.mealsonwheels.models.Food
@@ -45,6 +47,10 @@ class RestaurantDetailActivity : AppCompatActivity() {
             }
         }
 
+        rating_detail.setOnClickListener {
+
+            startActivity(Intent(this, OrderActivity::class.java))
+        }
         overlay.setOnClickListener {
 
             if (fab.visibility != View.VISIBLE) {
@@ -54,11 +60,11 @@ class RestaurantDetailActivity : AppCompatActivity() {
         }
 
         t1.setOnClickListener {
-            Toast.makeText(this,"T1 pressed", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "T1 pressed", Toast.LENGTH_LONG).show()
         }
 
         t2.setOnClickListener {
-            Toast.makeText(this,"T2 pressed", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "T2 pressed", Toast.LENGTH_LONG).show()
         }
 //        foodAdapter = FoodAdapter(this, foods)
         foodListAdapter = FoodListAdapter(this, foods)
@@ -74,8 +80,6 @@ class RestaurantDetailActivity : AppCompatActivity() {
         val foodReference = FirebaseDatabase.getInstance().getReference("food")
 
         val categoryList = ArrayList<String>()
-        val foodList = ArrayList<String>()
-
 
         resCategoryReference.child(id!!).addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -129,6 +133,9 @@ class RestaurantDetailActivity : AppCompatActivity() {
                                                             rating =
                                                                 p2.child("rating").getValue(true)
                                                                     .toString()
+                                                            foodId =
+                                                                p2.child("foodId").getValue(true)
+                                                                    .toString()
                                                         }
 
 
@@ -162,6 +169,11 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
     }
 
+    override fun onStop() {
+
+        foodListAdapter.onStop()
+        super.onStop()
+    }
 
 
 }

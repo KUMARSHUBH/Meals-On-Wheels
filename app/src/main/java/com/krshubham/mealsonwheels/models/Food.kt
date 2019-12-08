@@ -4,5 +4,6 @@ data class Food(
     var name: String = "",
     var price: String = "",
     var rating: String = "",
-    var image: String = ""
+    var image: String = "",
+    var foodId: String = ""
 )

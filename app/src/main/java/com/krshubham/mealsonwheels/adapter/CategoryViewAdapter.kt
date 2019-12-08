@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.square_category_layout.view.*
 
 class CategoryViewAdapter(
     val context: Context,
-    val categoryList: List<Category>?
+    private val categoryList: List<Category>?
 ) : RecyclerView.Adapter<CategoryViewAdapter.CategoryViewHolder>() {
 
 
