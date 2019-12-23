@@ -76,6 +76,7 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
             val bottomSheetFragment = BottomSheetFragment()
             bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
+
         }
 
         Picasso.get().load(resImage).into(toolbar_background)

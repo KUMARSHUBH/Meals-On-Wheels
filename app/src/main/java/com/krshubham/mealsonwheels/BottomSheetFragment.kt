@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -28,11 +29,14 @@ import com.krshubham.mealsonwheels.db.CartDataSourceImpl
 import com.krshubham.mealsonwheels.db.CartDatabase
 import com.krshubham.mealsonwheels.models.User
 import com.krshubham.mealsonwheels.ui.LocationDetail
+import com.krshubham.mealsonwheels.ui.UserDetail
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.bottom_sheet_search_location.*
 import kotlinx.android.synthetic.main.cart_bottom_sheet.*
+import kotlinx.android.synthetic.main.cooking_instruction_dialog_layout.*
+import kotlinx.android.synthetic.main.cooking_instruction_dialog_layout.view.*
 import java.util.*
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
@@ -47,6 +51,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var databaseReference: DatabaseReference
     private lateinit var firebaseAuth: FirebaseAuth
 
+    private lateinit var userName: String
+    private lateinit var phone_no: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,41 +69,57 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(context!!).cartDao())
         compositeDisposable = CompositeDisposable()
 
+        change_order_info.setOnClickListener {
 
+            val intent = Intent(this.activity, UserDetail::class.java)
+            intent.putExtra("name", userName)
+            intent.putExtra("phone_no", phone_no)
+            startActivity(intent)
+        }
 
         firebaseAuth = FirebaseAuth.getInstance()
         databaseReference =
             FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
 
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                val user = p0.getValue(User::class.java)
-                if (user != null) {
-                    delivery_address.text =
-                        geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
-
-                    usr_email_phone.text = "${user.name}, ${user.email}"
 
 
-                }
-
-            }
-
-        })
 
         orders_recycler_view.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL, false
         )
 
+        special_instruction_text.setOnClickListener {
+
+            val alertDialog = AlertDialog.Builder(this.context!!).create()
+            val dialogView = layoutInflater.inflate(R.layout.cooking_instruction_dialog_layout,null)
+            alertDialog.setView(dialogView)
+            alertDialog.show()
+
+            dialogView.add_instruction.setOnClickListener {
+
+                val textView = TextView(context)
+                textView.text = alertDialog.instructions_edit_text.text.toString()
+
+                instruction_list.visibility = View.VISIBLE
+                instruction_list.addView(textView)
+
+                alertDialog.dismiss()
+            }
+
+            alertDialog.cancel_dialog.setOnClickListener {
+
+                alertDialog.dismiss()
+            }
+
+
+
+        }
+
         geocoder = Geocoder(context, Locale.getDefault())
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.activity as Activity)
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(this.activity as Activity)
 
         val bottomSheetBehavior = BottomSheetBehavior.from(bottom_search_sheet)
         bottomSheetBehavior.setBottomSheetCallback(object :
@@ -169,29 +191,30 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                val adapter = CartListAdapter(context!!,it)
+                val adapter = CartListAdapter(context!!, it)
                 orders_recycler_view.adapter = adapter
 
                 itemTotal = 0.0
-                it.forEach {cartItem->
+                it.forEach { cartItem ->
 
-                    val total = (cartItem.quantity)*(cartItem.price)
+                    val total = (cartItem.quantity) * (cartItem.price)
                     itemTotal += total
                 }
 
 
-                tax = (itemTotal*18)/100
+                tax = (itemTotal * 18) / 100
 
 
                 total_price.text = itemTotal.toString()
                 taxes.text = tax.toString()
 
-                total_payable_price.text = (itemTotal+tax).toString()
+                total_payable_price.text = (itemTotal + tax).toString()
                 total_cost.text = total_payable_price.text
 
-            },{
-                Toast.makeText(context,it.message,Toast.LENGTH_LONG).show()
-            }))
+            }, {
+                Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            })
+        )
 
 
     }
@@ -273,7 +296,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                         .setMessage("We use this permission to detect your current location and show you great restaurants around you. Are you sure you want to deny the permission?")
                         .setPositiveButton("RETRY") { dialogInterface, i ->
 
-                            ActivityCompat.requestPermissions(this.activity as Activity,
+                            ActivityCompat.requestPermissions(
+                                this.activity as Activity,
                                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                                 0
                             )
@@ -293,6 +317,32 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                 // Ignore all other requests.
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                val user = p0.getValue(User::class.java)
+                if (user != null) {
+                    delivery_address.text =
+                        geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
+
+                    userName = user.name
+                    phone_no = user.phone!!
+                    usr_email_phone.text = "$userName, $phone_no"
+
+
+                }
+
+            }
+
+        })
     }
 
     override fun onStop() {

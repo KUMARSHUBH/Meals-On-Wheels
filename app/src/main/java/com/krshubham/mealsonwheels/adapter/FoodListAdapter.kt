@@ -99,11 +99,16 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
 
                         if (it != null) {
 
-                            if (it.quantity != 0) {
+                            if (it.quantity == 0) {
+                                holder.addOrRemove?.visibility = View.INVISIBLE
+
+                            }
+                            else{
+
                                 holder.addOrRemove?.visibility = View.VISIBLE
                                 holder.itemCount?.text = it.quantity.toString()
                             }
-                            else holder.addOrRemove?.visibility = View.INVISIBLE
+
                         }
                         else
                             holder.addOrRemove?.visibility = View.INVISIBLE
