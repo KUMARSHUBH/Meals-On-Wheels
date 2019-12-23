@@ -81,9 +81,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         databaseReference =
             FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
 
-
-
-
         orders_recycler_view.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL, false
