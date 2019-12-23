@@ -1,6 +1,5 @@
 package com.krshubham.mealsonwheels.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,20 +9,30 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.krshubham.mealsonwheels.BottomSheetFragment
-import com.krshubham.mealsonwheels.OrderActivity
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.adapter.FoodListAdapter
+import com.krshubham.mealsonwheels.db.CartDataSource
+import com.krshubham.mealsonwheels.db.CartDataSourceImpl
+import com.krshubham.mealsonwheels.db.CartDatabase
 import com.krshubham.mealsonwheels.models.Food
 import com.squareup.picasso.Picasso
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_restaurant_detail.*
 
 class RestaurantDetailActivity : AppCompatActivity() {
 
     private lateinit var foodListAdapter: FoodListAdapter
 
+    lateinit var compositeDisposable: CompositeDisposable
+    lateinit var cartDataSource: CartDataSource
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restaurant_detail)
+
 
         val id = intent.getStringExtra("id")
         val resName = intent.getStringExtra("name")
@@ -31,10 +40,37 @@ class RestaurantDetailActivity : AppCompatActivity() {
         val resPhone = intent.getStringExtra("phone")
         val resImage = intent.getStringExtra("image")
 
+        compositeDisposable = CompositeDisposable()
+        cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(this).cartDao())
+
+        compositeDisposable.add(cartDataSource.getAllCartItems()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+
+                if (it == null || it.isEmpty()) {
+
+                    bottom_app_bar.visibility = View.GONE
+                } else {
+
+                    var items = 0
+                    var price = 0.0
+                    bottom_app_bar.visibility = View.VISIBLE
+                    it.forEach { cartItem ->
+
+                        items += cartItem.quantity
+                        price += (cartItem.price * cartItem.quantity)
+                    }
+
+                    cart_items.text = "$items ITEMS"
+                    cart_price.text = "Rs. $price plus taxes"
+                }
+            })
+
+
         val foods = ArrayList<Any>()
         name_detail.text = resName
         rating_detail.text = resRating
-
 
         view_cart.setOnClickListener {
 
@@ -44,43 +80,11 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
         Picasso.get().load(resImage).into(toolbar_background)
 
-//        fab.setOnClickListener {
-//
-//            if (fab.visibility == View.VISIBLE) {
-//                FabTransformation.with(fab)
-//                    .duration(200).setOverlay(overlay).transformTo(card)
-//            }
-//        }
-
-        rating_detail.setOnClickListener {
-
-            startActivity(Intent(this, OrderActivity::class.java))
-        }
-//        overlay.setOnClickListener {
-//
-//            if (fab.visibility != View.VISIBLE) {
-//                FabTransformation.with(fab).setOverlay(overlay)
-//                    .duration(200).transformFrom(card)
-//            }
-//        }
-//
-//        t1.setOnClickListener {
-//            Toast.makeText(this, "T1 pressed", Toast.LENGTH_LONG).show()
-//        }
-//
-//        t2.setOnClickListener {
-//            Toast.makeText(this, "T2 pressed", Toast.LENGTH_LONG).show()
-//        }
-//        foodAdapter = FoodAdapter(this, foods)
         foodListAdapter = FoodListAdapter(this, foods)
-        restaurant_detail_recycler_view.adapter = foodListAdapter
+
         restaurant_detail_recycler_view.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        rating_detail.setOnClickListener {
-
-            bottom_app_bar.visibility = View.VISIBLE
-        }
 
         val resCategoryReference =
             FirebaseDatabase.getInstance().getReference("restaurantCategories")
@@ -168,11 +172,15 @@ class RestaurantDetailActivity : AppCompatActivity() {
 
                 })
 
-
             }
-
-
         })
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        restaurant_detail_recycler_view.adapter = foodListAdapter
 
 
     }
@@ -180,6 +188,7 @@ class RestaurantDetailActivity : AppCompatActivity() {
     override fun onStop() {
 
         foodListAdapter.onStop()
+        compositeDisposable.clear()
         super.onStop()
     }
 

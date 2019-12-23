@@ -6,13 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.krshubham.mealsonwheels.db.CartDataSource
+import com.krshubham.mealsonwheels.db.CartDataSourceImpl
+import com.krshubham.mealsonwheels.db.CartDatabase
 import com.krshubham.mealsonwheels.db.CartItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.cart_item_layout.view.*
 
 
 class CartListAdapter(val context: Context, val items : List<CartItem>): RecyclerView.Adapter<CartListAdapter.ViewHolder>(){
 
+
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private val cartDataSource: CartDataSource
+
+    init {
+
+        cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(this.context).cartDao())
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
@@ -43,10 +58,73 @@ class CartListAdapter(val context: Context, val items : List<CartItem>): Recycle
 
         holder.addItemCart?.setOnClickListener {
 
+            compositeDisposable.add(cartDataSource.increaseQuantity((items[position]).foodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        cartDataSource.getCartItem((items[position]).foodId)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+
+                                holder.itemCountCart?.text = it.quantity.toString()
+                            }, { t: Throwable? ->
+                                Toast.makeText(
+                                    this.context,
+                                    "[COUNT] $t",
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+
+                            })
+                    },
+                    { t: Throwable? ->
+                        Toast.makeText(this.context, "[UPDATE] $t", Toast.LENGTH_LONG)
+                            .show()
+
+                    }
+                ))
         }
 
         holder.removeItemCart?.setOnClickListener {
 
+            compositeDisposable.add(cartDataSource.decreaseQuantity((items[position]).foodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        cartDataSource.getCartItem((items[position]).foodId)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+
+                                if (it != null)
+                                    if (it.quantity != 0)
+                                        holder.itemCountCart?.text = it.quantity.toString()
+                                    else {
+                                        cartDataSource.deleteCartItem(it)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe()
+                                    }
+
+                            }, { t: Throwable? ->
+                                Toast.makeText(
+                                    this.context,
+                                    "[COUNT] $t",
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+
+                            })
+                    },
+                    { t: Throwable? ->
+                        Toast.makeText(this.context, "[UPDATE] $t", Toast.LENGTH_LONG)
+                            .show()
+
+                    }
+                ))
         }
 
     }

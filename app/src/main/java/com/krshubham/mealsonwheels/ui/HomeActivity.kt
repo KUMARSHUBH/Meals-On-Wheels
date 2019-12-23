@@ -168,7 +168,7 @@ class HomeActivity : AppCompatActivity() {
 
         nav.setNavigationItemSelectedListener {
 
-            if(it.itemId == R.id.log_out){
+            if (it.itemId == R.id.log_out) {
 
                 firebaseAuth.signOut()
                 startActivity(Intent(this, UserLoginActivity::class.java))

@@ -11,7 +11,7 @@ class CartDataSourceImpl(private val cartDao: CartDao) : CartDataSource {
         return cartDao.getAllCartItems()
     }
 
-    override fun getCartItemCount(): Single<Int> {
+    override fun getCartItemCount(): Observable<Int> {
 
         return cartDao.getCartItemCount()
     }

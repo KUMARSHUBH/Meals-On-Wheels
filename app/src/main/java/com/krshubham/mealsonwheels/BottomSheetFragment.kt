@@ -29,9 +29,12 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        var itemTotal: Double
+        var tax: Double
 
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(context!!).cartDao())
         compositeDisposable = CompositeDisposable()
+
 
         orders_recycler_view.layoutManager = LinearLayoutManager(
             context,
@@ -46,9 +49,27 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                 val adapter = CartListAdapter(context!!,it)
                 orders_recycler_view.adapter = adapter
 
+                itemTotal = 0.0
+                it.forEach {cartItem->
+
+                    val total = (cartItem.quantity)*(cartItem.price)
+                    itemTotal += total
+                }
+
+
+                tax = (itemTotal*18)/100
+
+
+                total_price.text = itemTotal.toString()
+                taxes.text = tax.toString()
+
+                total_payable_price.text = (itemTotal+tax).toString()
+                total_cost.text = total_payable_price.text
+
             },{
                 Toast.makeText(context,it.message,Toast.LENGTH_LONG).show()
             }))
+
 
     }
 

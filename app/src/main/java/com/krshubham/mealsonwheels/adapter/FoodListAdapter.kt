@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
-import com.krshubham.mealsonwheels.adapter.FoodListAdapter.ItemType.status
 import com.krshubham.mealsonwheels.db.CartDataSource
 import com.krshubham.mealsonwheels.db.CartDataSourceImpl
 import com.krshubham.mealsonwheels.db.CartDatabase
@@ -21,8 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.category_heading_layout.view.*
 import kotlinx.android.synthetic.main.food_item_layout.view.*
-import org.reactivestreams.Subscriber
-import org.reactivestreams.Subscription
+
 
 class FoodListAdapter(val context: Context, val list: List<Any>?) :
     RecyclerView.Adapter<FoodListAdapter.ViewHolder>() {
@@ -34,11 +31,12 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
 
         var itemCount: Int = 0
         var totalCost: Double = 0.0
-        lateinit var status: MutableLiveData<Boolean>
+
     }
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val cartDataSource: CartDataSource
+
 
     init {
 
@@ -89,30 +87,10 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
             holder.price?.text = (list[position] as Food).price
             holder.image?.clipToOutline = true
 
-            cartDataSource.getAllCartItems().
-                subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<List<CartItem>>{
-                    override fun onComplete() {
-
-                    }
-
-                    override fun onSubscribe(s: Subscription?) {
-
-                    }
-
-                    override fun onNext(t: List<CartItem>?) {
-
-                        if(t != null)
-                            status.value = true
-                    }
-
-                    override fun onError(t: Throwable?) {
-
-                    }
 
 
-                })
+
+
             compositeDisposable.add(
                 cartDataSource.getCartItem((list[position] as Food).foodId)
                     .subscribeOn(Schedulers.io())
@@ -125,7 +103,9 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                 holder.addOrRemove?.visibility = View.VISIBLE
                                 holder.itemCount?.text = it.quantity.toString()
                             }
-                        } else
+                            else holder.addOrRemove?.visibility = View.INVISIBLE
+                        }
+                        else
                             holder.addOrRemove?.visibility = View.INVISIBLE
 
 

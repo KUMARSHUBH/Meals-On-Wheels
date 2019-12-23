@@ -10,7 +10,7 @@ interface CartDataSource {
 
     fun getAllCartItems(): Flowable<List<CartItem>>
 
-    fun getCartItemCount(): Single<Int>
+    fun getCartItemCount(): Observable<Int>
 
     fun sumPrice(): Single<Float>
 

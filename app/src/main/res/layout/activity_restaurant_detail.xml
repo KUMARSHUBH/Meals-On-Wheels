@@ -262,12 +262,14 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/cart_items"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1 ITEM"
                     android:textColor="@android:color/white" />
 
                 <TextView
+                    android:id="@+id/cart_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$50 plus taxes"
@@ -302,6 +304,7 @@
 
 
     <include layout="@layout/cart_bottom_sheet"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

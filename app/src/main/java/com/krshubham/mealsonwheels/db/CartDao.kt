@@ -13,7 +13,7 @@ interface CartDao {
     fun getAllCartItems(): Flowable<List<CartItem>>
 
     @Query("SELECT COUNT(*) FROM cart")
-    fun getCartItemCount(): Single<Int>
+    fun getCartItemCount(): Observable<Int>
 
     @Query("SELECT COUNT(*) FROM cart where foodId = :foodId")
     fun checkIfPresent(foodId: String): Single<Int>
