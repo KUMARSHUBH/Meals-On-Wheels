@@ -25,7 +25,11 @@
         android:id="@+id/navigation_cart"
         android:name="com.krshubham.mealsonwheels.ui.fragments.cart.CartFragment"
         android:label="@string/title_cart"
-        tools:layout="@layout/fragment_cart" />
+        tools:layout="@layout/fragment_cart" >
+        <action
+            android:id="@+id/action_navigation_cart_to_navigation_food"
+            app:destination="@id/navigation_food" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_video"
         android:name="com.krshubham.mealsonwheels.ui.fragments.videos.VideosFragment"

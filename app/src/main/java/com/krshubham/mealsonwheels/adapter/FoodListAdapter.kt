@@ -39,12 +39,14 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val cartDataSource: CartDataSource
     private val sharedPreferences: SharedPreferences
+    private val cartSharedPreferences: SharedPreferences
     private var a: String
 
     init {
 
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(this.context).cartDao())
         sharedPreferences = context.getSharedPreferences("OrderRestId",Context.MODE_PRIVATE)
+        cartSharedPreferences = context.getSharedPreferences("CartEmpty",Context.MODE_PRIVATE)
         a = ""
     }
 
@@ -146,6 +148,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                 {
 
                                     sharedPreferences.edit().putString("resId",a).apply()
+                                    cartSharedPreferences.edit().putBoolean("empty",false).apply()
 
                                 }, { t: Throwable? ->
                                     Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
@@ -172,6 +175,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                                 {
 
                                                     sharedPreferences.edit().putString("resId",a).apply()
+                                                    cartSharedPreferences.edit().putBoolean("empty",false).apply()
                                                     dialogInterface.dismiss()
                                                 }, { t: Throwable? ->
                                                     Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
@@ -200,6 +204,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                 {
 
                                     sharedPreferences.edit().putString("resId",a).apply()
+                                    cartSharedPreferences.edit().putBoolean("empty",false).apply()
                                 }, { t: Throwable? ->
                                     Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
                                         .show()
@@ -235,6 +240,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                 {
 
                                     sharedPreferences.edit().putString("resId",a).apply()
+                                    cartSharedPreferences.edit().putBoolean("empty",false).apply()
 
                                 }, { t: Throwable? ->
                                     Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
@@ -261,6 +267,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                                 {
 
                                                     sharedPreferences.edit().putString("resId",a).apply()
+                                                    cartSharedPreferences.edit().putBoolean("empty",false).apply()
                                                     dialogInterface.dismiss()
                                                 }, { t: Throwable? ->
                                                     Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
@@ -289,6 +296,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                                 {
 
                                     sharedPreferences.edit().putString("resId",a).apply()
+                                    cartSharedPreferences.edit().putBoolean("empty",false).apply()
                                 }, { t: Throwable? ->
                                     Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
                                         .show()

@@ -369,6 +369,39 @@
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
+    <RelativeLayout
+        android:id="@+id/empty_cart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true">
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/empty_cart" />
+
+            <Button
+                android:id="@+id/browse_res"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Browse Restauants"
+                android:textAllCaps="false"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="64dp"
+                android:layout_marginStart="64dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
 
     <include layout="@layout/bottom_sheet_search_location" />
 

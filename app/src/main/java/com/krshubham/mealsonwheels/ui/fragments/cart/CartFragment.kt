@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -44,6 +45,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_search_location.*
 import kotlinx.android.synthetic.main.cooking_instruction_dialog_layout.*
 import kotlinx.android.synthetic.main.cooking_instruction_dialog_layout.view.*
 import kotlinx.android.synthetic.main.fragment_cart.*
+import kotlinx.android.synthetic.main.layout_empty_cart.*
 import java.util.*
 
 class CartFragment : Fragment() {
@@ -53,7 +55,7 @@ class CartFragment : Fragment() {
     private lateinit var compositeDisposable: CompositeDisposable
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var location: Location
+    private var location: Location? = null
     private lateinit var geocoder: Geocoder
     private lateinit var addresses: List<Address>
     private lateinit var databaseReference: DatabaseReference
@@ -63,6 +65,7 @@ class CartFragment : Fragment() {
     private lateinit var userName: String
     private lateinit var phone_no: String
     private lateinit var sharedPreferences: SharedPreferences
+    private var empty: Boolean = false
 
 
     override fun onCreateView(
@@ -77,218 +80,264 @@ class CartFragment : Fragment() {
         compositeDisposable = CompositeDisposable()
         sharedPreferences = context?.getSharedPreferences("OrderRestId", Context.MODE_PRIVATE)!!
 
-        return inflater.inflate(R.layout.fragment_cart, container, false)
+        return if (sharedPreferences.getString(
+                "resId",
+                ""
+            ).isNullOrEmpty() || sharedPreferences.getString("resId", "") == ""
+        ) {
+            empty = true
+            inflater.inflate(R.layout.layout_empty_cart, container, false)
+        } else {
+            empty = false
+            inflater.inflate(R.layout.fragment_cart, container, false)
+        }
+
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var itemTotal: Double
-        var tax: Double
+        if (!empty) {
+
+            var itemTotal: Double
+            var tax: Double
 
 
-        var name = ""
-        var id = ""
-        var phone = ""
-        var image = ""
-        var rating = ""
+            var name = ""
+            var id = ""
+            var phone = ""
+            var image = ""
+            var rating = ""
 
 
+            change_order_info_cart.setOnClickListener {
 
-
-        change_order_info_cart.setOnClickListener {
-
-            val intent = Intent(this.activity, UserDetail::class.java)
-            intent.putExtra("name", userName)
-            intent.putExtra("phone_no", phone_no)
-            startActivity(intent)
-        }
-
-        firebaseAuth = FirebaseAuth.getInstance()
-        databaseReference =
-            FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
-
-
-
-
-        orders_recycler_view_cart.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL, false
-        )
-
-        special_instruction_text_cart.setOnClickListener {
-
-            val alertDialog = AlertDialog.Builder(this.context!!).create()
-            val dialogView =
-                layoutInflater.inflate(R.layout.cooking_instruction_dialog_layout, null)
-            alertDialog.setView(dialogView)
-            alertDialog.show()
-
-            dialogView.add_instruction.setOnClickListener {
-
-                val textView = TextView(context)
-                textView.text = alertDialog.instructions_edit_text.text.toString()
-
-                instruction_list_cart.visibility = View.VISIBLE
-                instruction_list_cart.addView(textView)
-
-                alertDialog.dismiss()
+                val intent = Intent(this.activity, UserDetail::class.java)
+                intent.putExtra("name", userName)
+                intent.putExtra("phone_no", phone_no)
+                startActivity(intent)
             }
 
-            alertDialog.cancel_dialog.setOnClickListener {
-
-                alertDialog.dismiss()
-            }
-
-
-        }
-
-        geocoder = Geocoder(context, Locale.getDefault())
-
-        fusedLocationClient =
-            LocationServices.getFusedLocationProviderClient(this.activity as Activity)
-
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottom_search_sheet)
-        bottomSheetBehavior.setBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-
-            }
-
-            override fun onStateChanged(p0: View, p1: Int) {
-
-                if (p1 == BottomSheetBehavior.STATE_DRAGGING) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                }
-            }
-        })
+            firebaseAuth = FirebaseAuth.getInstance()
+            databaseReference =
+                FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
 
 
-        location_change_cart.setOnClickListener {
 
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
+            orders_recycler_view_cart.layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL, false
+            )
 
-        close.setOnClickListener {
+            special_instruction_text_cart.setOnClickListener {
 
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+                val alertDialog = AlertDialog.Builder(this.context!!).create()
+                val dialogView =
+                    layoutInflater.inflate(R.layout.cooking_instruction_dialog_layout, null)
+                alertDialog.setView(dialogView)
+                alertDialog.show()
 
-        use_location.setOnClickListener {
+                dialogView.add_instruction.setOnClickListener {
 
-            fetchLocation()
+                    val textView = TextView(context)
+                    textView.text = alertDialog.instructions_edit_text.text.toString()
 
-        }
+                    instruction_list_cart.visibility = View.VISIBLE
+                    instruction_list_cart.addView(textView)
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-
-
-                addresses = geocoder.getFromLocationName(query, 1)
-                if (addresses.isNotEmpty()) {
-
-                    val lat = addresses[0].latitude
-                    val lng = addresses[0].longitude
-                    val intent = Intent(context, LocationDetail::class.java)
-                    intent.putExtra("lat", lat)
-                    intent.putExtra("lng", lng)
-                    startActivity(intent)
-                } else {
-
-                    Toast.makeText(
-                        context,
-                        "Try again with different name",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    alertDialog.dismiss()
                 }
 
-                return true
+                alertDialog.cancel_dialog.setOnClickListener {
+
+                    alertDialog.dismiss()
+                }
+
+
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
+            geocoder = Geocoder(context, Locale.getDefault())
 
-                return true
+            fusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(this.activity as Activity)
+
+            val bottomSheetBehavior = BottomSheetBehavior.from(bottom_search_sheet)
+            bottomSheetBehavior.setBottomSheetCallback(object :
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onSlide(p0: View, p1: Float) {
+
+                }
+
+                override fun onStateChanged(p0: View, p1: Int) {
+
+                    if (p1 == BottomSheetBehavior.STATE_DRAGGING) {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    }
+                }
+            })
+
+
+            location_change_cart.setOnClickListener {
+
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
 
+            close.setOnClickListener {
 
-        })
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
 
+            use_location.setOnClickListener {
 
-        compositeDisposable.add(
-            cartDataSource.getAllCartItems()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    val adapter = CartListAdapter(context!!, it)
-                    orders_recycler_view_cart.adapter = adapter
+                fetchLocation()
 
-                    if (it.isNullOrEmpty())
-                        sharedPreferences.edit().putString("resId", "").apply()
+            }
 
-                    var idFromFood: String = ""
-                    itemTotal = 0.0
-                    it?.forEach { cartItem ->
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
 
 
-                        idFromFood = "-${cartItem.foodId.substringAfter("-")}"
-                        val total = (cartItem.quantity) * (cartItem.price)
-                        itemTotal += total
+                    addresses = geocoder.getFromLocationName(query, 1)
+                    if (addresses.isNotEmpty()) {
+
+                        val lat = addresses[0].latitude
+                        val lng = addresses[0].longitude
+                        val intent = Intent(context, LocationDetail::class.java)
+                        intent.putExtra("lat", lat)
+                        intent.putExtra("lng", lng)
+                        startActivity(intent)
+                    } else {
+
+                        Toast.makeText(
+                            context,
+                            "Try again with different name",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
 
-                    resReference =
-                        FirebaseDatabase.getInstance().getReference("restaurant/$idFromFood")
+                    return true
+                }
 
-                    resReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
+                override fun onQueryTextChange(newText: String?): Boolean {
+
+                    return true
+                }
+
+
+            })
+
+
+            compositeDisposable.add(
+                cartDataSource.getAllCartItems()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        val adapter = CartListAdapter(context!!, it)
+                        orders_recycler_view_cart.adapter = adapter
+
+                        if (it.isNullOrEmpty()){
+                            sharedPreferences.edit().putString("resId", "").apply()
 
                         }
 
-                        override fun onDataChange(ds: DataSnapshot) {
+                        empty_cart.visibility = View.GONE
 
-                            val restaurant = Restaurant()
-                            restaurant.apply {
+                        var idFromFood = ""
+                        itemTotal = 0.0
+                        it?.forEach { cartItem ->
 
-                                id = ds.child("id").getValue(true).toString()
-                                name = ds.child("name").getValue(true).toString()
-                                rating = ds.child("rating").getValue(true).toString()
-                                image = ds.child("image").getValue(true).toString()
-                                phone = ds.child("phone").getValue(true).toString()
+
+                            idFromFood = "-${cartItem.foodId.substringAfter("-")}"
+                            val total = (cartItem.quantity) * (cartItem.price)
+                            itemTotal += total
+                        }
+
+                        resReference =
+                            FirebaseDatabase.getInstance().getReference("restaurant/$idFromFood")
+
+                        resReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
 
                             }
 
+                            override fun onDataChange(ds: DataSnapshot) {
 
-                            res_name_cart.text = name
+                                val restaurant = Restaurant()
+                                restaurant.apply {
+
+                                    id = ds.child("id").getValue(true).toString()
+                                    name = ds.child("name").getValue(true).toString()
+                                    rating = ds.child("rating").getValue(true).toString()
+                                    image = ds.child("image").getValue(true).toString()
+                                    phone = ds.child("phone").getValue(true).toString()
+
+                                }
+
+
+                                res_name_cart.text = name
+
+                                if(context?.getSharedPreferences("CartEmpty",Context.MODE_PRIVATE)?.getBoolean("empty",false)!!){
+
+                                    empty_cart.visibility = View.VISIBLE
+
+                                    browse_res.setOnClickListener {
+
+                                        Navigation.findNavController(it)
+                                            .navigate(R.id.action_navigation_cart_to_navigation_food)
+                                    }
+                                }
+                            }
+
+
+                        })
+
+
+                        res_name_cart.setOnClickListener {
+
+                            val intent = Intent(this.context, RestaurantDetailActivity::class.java)
+                            intent.putExtra("id", id)
+                            intent.putExtra("name", name)
+                            intent.putExtra("phone", phone)
+                            intent.putExtra("image", image)
+                            intent.putExtra("rating", rating)
+                            startActivity(intent)
                         }
+                        tax = (itemTotal * 18) / 100
 
 
+
+                        total_price_cart.text = itemTotal.toString()
+                        taxes_cart.text = tax.toString()
+
+                        total_payable_price_cart.text = (itemTotal + tax).toString()
+                        total_cost_cart.text = total_payable_price_cart.text
+
+                    }, {
+                        Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
                     })
+            )
 
+        }
 
-                    res_name_cart.setOnClickListener {
+        else {
 
-                        val intent = Intent(this.context, RestaurantDetailActivity::class.java)
-                        intent.putExtra("id", id)
-                        intent.putExtra("name", name)
-                        intent.putExtra("phone", phone)
-                        intent.putExtra("image", image)
-                        intent.putExtra("rating", rating)
-                        startActivity(intent)
-                    }
-                    tax = (itemTotal * 18) / 100
+            geocoder = Geocoder(context, Locale.getDefault())
+            fusedLocationClient = FusedLocationProviderClient(context!!)
+            geocoder = Geocoder(context)
+            databaseReference = FirebaseDatabase.getInstance().reference
+            resReference = FirebaseDatabase.getInstance().reference
+            firebaseAuth = FirebaseAuth.getInstance()
+            userName = ""
+            phone_no = ""
 
+            browse.setOnClickListener {
 
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_navigation_cart_to_navigation_food)
+            }
 
-                    total_price_cart.text = itemTotal.toString()
-                    taxes_cart.text = tax.toString()
-
-                    total_payable_price_cart.text = (itemTotal + tax).toString()
-                    total_cost_cart.text = total_payable_price_cart.text
-
-                }, {
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-                })
-        )
-
+        }
 
     }
 
@@ -324,8 +373,8 @@ class CartFragment : Fragment() {
                 }
 
                 val intent = Intent(context, LocationDetail::class.java)
-                intent.putExtra("lat", location.latitude)
-                intent.putExtra("lng", location.longitude)
+                intent.putExtra("lat", location?.latitude)
+                intent.putExtra("lng", location?.longitude)
                 startActivity(intent)
             }
 
@@ -356,8 +405,8 @@ class CartFragment : Fragment() {
                         }
 
                         val intent = Intent(context, LocationDetail::class.java)
-                        intent.putExtra("lat", location.latitude)
-                        intent.putExtra("lng", location.longitude)
+                        intent.putExtra("lat", location?.latitude)
+                        intent.putExtra("lng", location?.longitude)
                         startActivity(intent)
 
                     }
@@ -395,28 +444,33 @@ class CartFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
 
-            }
+        if (!empty) {
 
-            override fun onDataChange(p0: DataSnapshot) {
-
-                val user = p0.getValue(User::class.java)
-                if (user != null) {
-                    delivery_address_cart.text =
-                        geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
-
-                    userName = user.name
-                    phone_no = user.phone!!
-                    usr_email_phone_cart.text = "$userName, $phone_no"
-
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
 
                 }
 
-            }
+                override fun onDataChange(p0: DataSnapshot) {
 
-        })
+                    val user = p0.getValue(User::class.java)
+                    if (user != null) {
+                        delivery_address_cart.text =
+                            geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
+
+                        userName = user.name
+                        phone_no = user.phone!!
+                        usr_email_phone_cart.text = "$userName, $phone_no"
+
+
+                    }
+
+                }
+
+            })
+        }
+
     }
 
 
