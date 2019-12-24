@@ -37,7 +37,7 @@ interface CartDao {
     fun deleteCartItem(cartItem: CartItem): Single<Int>
 
     @Query("DELETE FROM cart")
-    fun cleanCart()
+    fun cleanCart() : Completable
 
 
 }

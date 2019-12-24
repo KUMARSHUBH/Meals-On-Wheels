@@ -27,7 +27,7 @@ class CartDataSourceImpl(private val cartDao: CartDao) : CartDataSource {
     }
 
 
-    override fun cleanCart() {
+    override fun cleanCart(): Completable {
         return cartDao.cleanCart()
     }
 

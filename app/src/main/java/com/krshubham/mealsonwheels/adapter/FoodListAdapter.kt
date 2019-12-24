@@ -2,10 +2,12 @@ package com.krshubham.mealsonwheels.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.db.CartDataSource
@@ -36,11 +38,14 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val cartDataSource: CartDataSource
-
+    private val sharedPreferences: SharedPreferences
+    private var a: String
 
     init {
 
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(this.context).cartDao())
+        sharedPreferences = context.getSharedPreferences("OrderRestId",Context.MODE_PRIVATE)
+        a = ""
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -89,8 +94,6 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
 
 
 
-
-
             compositeDisposable.add(
                 cartDataSource.getCartItem((list[position] as Food).foodId)
                     .subscribeOn(Schedulers.io())
@@ -102,15 +105,13 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                             if (it.quantity == 0) {
                                 holder.addOrRemove?.visibility = View.INVISIBLE
 
-                            }
-                            else{
+                            } else {
 
                                 holder.addOrRemove?.visibility = View.VISIBLE
                                 holder.itemCount?.text = it.quantity.toString()
                             }
 
-                        }
-                        else
+                        } else
                             holder.addOrRemove?.visibility = View.INVISIBLE
 
 
@@ -123,6 +124,7 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
 
             holder.addToCartText?.setOnClickListener {
 
+
                 val cartItem = CartItem()
                 cartItem.apply {
 
@@ -132,21 +134,86 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                     quantity = 1
                 }
 
-                compositeDisposable.add(cartDataSource.insertCartItem(cartItem)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                        {
+                a = "-${cartItem.foodId.substringAfter("-")}"
+                if(sharedPreferences.getString("resId","") != a ){
+
+                    if(sharedPreferences.getString("resId","") == ""){
+
+                        cartDataSource.insertCartItem(cartItem)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                {
+
+                                    sharedPreferences.edit().putString("resId",a).apply()
+
+                                }, { t: Throwable? ->
+                                    Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            )
+
+                    }
+                 else{
+
+                        val alertDialog = AlertDialog.Builder(context)
+                            .setMessage("Do you want to remove your previous cart items from another restaurant?")
+                            .setPositiveButton("YES") { dialogInterface, i ->
+
+                                compositeDisposable.add(cartDataSource.cleanCart()
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe {
+
+                                        cartDataSource.insertCartItem(cartItem)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(
+                                                {
+
+                                                    sharedPreferences.edit().putString("resId",a).apply()
+                                                    dialogInterface.dismiss()
+                                                }, { t: Throwable? ->
+                                                    Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
+                                                        .show()
+                                                }
+                                            )
+                                    })
 
 
-                        }, { t: Throwable? ->
-                            Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
-                                .show()
-                        }
-                    ))
+                            }.setNegativeButton("No") { dialogInterface, i ->
+
+                                dialogInterface.dismiss()
+                            }.create()
+
+                        alertDialog.show()
+                    }
+                }
+
+                else{
+
+                    compositeDisposable.add(
+                        cartDataSource.insertCartItem(cartItem)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                {
+
+                                    sharedPreferences.edit().putString("resId",a).apply()
+                                }, { t: Throwable? ->
+                                    Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            )
+                    )
+
+                }
+
+
             }
             holder.addTOCartImage?.setOnClickListener {
 
+
                 val cartItem = CartItem()
                 cartItem.apply {
 
@@ -156,17 +223,82 @@ class FoodListAdapter(val context: Context, val list: List<Any>?) :
                     quantity = 1
                 }
 
-                compositeDisposable.add(cartDataSource.insertCartItem(cartItem)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                        {
-                            holder.addOrRemove?.visibility = View.VISIBLE
-                        }, { t: Throwable? ->
-                            Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
-                                .show()
-                        }
-                    ))
+                a = "-${cartItem.foodId.substringAfter("-")}"
+                if(sharedPreferences.getString("resId","") != a ){
+
+                    if(sharedPreferences.getString("resId","") == ""){
+
+                        cartDataSource.insertCartItem(cartItem)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                {
+
+                                    sharedPreferences.edit().putString("resId",a).apply()
+
+                                }, { t: Throwable? ->
+                                    Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            )
+
+                    }
+                    else{
+
+                        val alertDialog = AlertDialog.Builder(context)
+                            .setMessage("Do you want to remove your previous cart items from another restaurant?")
+                            .setPositiveButton("YES") { dialogInterface, i ->
+
+                                compositeDisposable.add(cartDataSource.cleanCart()
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe {
+
+                                        cartDataSource.insertCartItem(cartItem)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(
+                                                {
+
+                                                    sharedPreferences.edit().putString("resId",a).apply()
+                                                    dialogInterface.dismiss()
+                                                }, { t: Throwable? ->
+                                                    Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
+                                                        .show()
+                                                }
+                                            )
+                                    })
+
+
+                            }.setNegativeButton("No") { dialogInterface, i ->
+
+                                dialogInterface.dismiss()
+                            }.create()
+
+                        alertDialog.show()
+                    }
+                }
+
+                else{
+
+                    compositeDisposable.add(
+                        cartDataSource.insertCartItem(cartItem)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                {
+
+                                    sharedPreferences.edit().putString("resId",a).apply()
+                                }, { t: Throwable? ->
+                                    Toast.makeText(this.context, "[INSERT CART] $t", Toast.LENGTH_LONG)
+                                        .show()
+                                }
+                            )
+                    )
+
+                }
+
+
             }
 
             holder.addItem?.setOnClickListener {

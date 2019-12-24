@@ -1,5 +1,6 @@
 package com.krshubham.mealsonwheels.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -40,6 +41,9 @@ class RestaurantDetailActivity : AppCompatActivity() {
         val resPhone = intent.getStringExtra("phone")
         val resImage = intent.getStringExtra("image")
 
+        val sharedPreferences = getSharedPreferences("OrderRestId", Context.MODE_PRIVATE)
+
+        var currentResId: String
         compositeDisposable = CompositeDisposable()
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(this).cartDao())
 
@@ -51,19 +55,29 @@ class RestaurantDetailActivity : AppCompatActivity() {
                 if (it == null || it.isEmpty()) {
 
                     bottom_app_bar.visibility = View.GONE
+                    sharedPreferences.edit().putString("resId","").apply()
+
                 } else {
 
-                    var items = 0
-                    var price = 0.0
-                    bottom_app_bar.visibility = View.VISIBLE
-                    it.forEach { cartItem ->
+                    currentResId = "-${it[0].foodId.substringAfter("-")}"
 
-                        items += cartItem.quantity
-                        price += (cartItem.price * cartItem.quantity)
+                    if(currentResId != id)
+                        bottom_app_bar.visibility = View.GONE
+
+                  else{
+
+                        var items = 0
+                        var price = 0.0
+                        bottom_app_bar.visibility = View.VISIBLE
+                        it.forEach { cartItem ->
+
+                            items += cartItem.quantity
+                            price += (cartItem.price * cartItem.quantity)
+                        }
+
+                        cart_items.text = "$items ITEMS"
+                        cart_price.text = "Rs. $price plus taxes"
                     }
-
-                    cart_items.text = "$items ITEMS"
-                    cart_price.text = "Rs. $price plus taxes"
                 }
             })
 

@@ -26,6 +26,6 @@ interface CartDataSource {
 
     fun deleteCartItem(cartItem: CartItem): Single<Int>
 
-    fun cleanCart()
+    fun cleanCart(): Completable
 
 }

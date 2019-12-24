@@ -231,7 +231,7 @@ class CartFragment : Fragment() {
                     it.forEach { cartItem ->
 
 
-                        if(idFromFood == null){
+                        if (idFromFood == null) {
 
                             idFromFood = "-${cartItem.foodId.substringAfter("-")}"
                         }
