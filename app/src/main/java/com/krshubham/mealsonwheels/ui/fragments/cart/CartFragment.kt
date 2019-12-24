@@ -2,7 +2,9 @@ package com.krshubham.mealsonwheels.ui.fragments.cart
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -60,7 +62,7 @@ class CartFragment : Fragment() {
 
     private lateinit var userName: String
     private lateinit var phone_no: String
-
+    private lateinit var sharedPreferences: SharedPreferences
     private var idFromFood: String? = null
 
     override fun onCreateView(
@@ -90,6 +92,8 @@ class CartFragment : Fragment() {
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(context!!).cartDao())
         compositeDisposable = CompositeDisposable()
 
+
+        sharedPreferences = context?.getSharedPreferences("OrderRestId", Context.MODE_PRIVATE)!!
         change_order_info_cart.setOnClickListener {
 
             val intent = Intent(this.activity, UserDetail::class.java)
@@ -227,55 +231,63 @@ class CartFragment : Fragment() {
                     val adapter = CartListAdapter(context!!, it)
                     orders_recycler_view_cart.adapter = adapter
 
-                    itemTotal = 0.0
-                    it.forEach { cartItem ->
+                    if (it.isEmpty() || it != null) {
+
+                        sharedPreferences.edit().putString("resId", "").apply()
+
+                    } else {
+
+                        itemTotal = 0.0
+                        it?.forEach { cartItem ->
 
 
-                        if (idFromFood == null) {
+                            if (idFromFood == null) {
 
-                            idFromFood = "-${cartItem.foodId.substringAfter("-")}"
-                        }
-                        val total = (cartItem.quantity) * (cartItem.price)
-                        itemTotal += total
-                    }
-
-
-                    resReference =
-                        FirebaseDatabase.getInstance().getReference("restaurant/$idFromFood")
-
-
-                    resReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onCancelled(p0: DatabaseError) {
-
+                                idFromFood = "-${cartItem.foodId.substringAfter("-")}"
+                            }
+                            val total = (cartItem.quantity) * (cartItem.price)
+                            itemTotal += total
                         }
 
-                        override fun onDataChange(ds: DataSnapshot) {
 
-                            val restaurant = Restaurant()
-                            restaurant.apply {
+                        resReference =
+                            FirebaseDatabase.getInstance().getReference("restaurant/$idFromFood")
 
-                                id = ds.child("id").getValue(true).toString()
-                                name = ds.child("name").getValue(true).toString()
-                                rating = ds.child("rating").getValue(true).toString()
-                                image = ds.child("image").getValue(true).toString()
-                                phone = ds.child("phone").getValue(true).toString()
+
+                        resReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
 
                             }
 
-                        }
+                            override fun onDataChange(ds: DataSnapshot) {
+
+                                val restaurant = Restaurant()
+                                restaurant.apply {
+
+                                    id = ds.child("id").getValue(true).toString()
+                                    name = ds.child("name").getValue(true).toString()
+                                    rating = ds.child("rating").getValue(true).toString()
+                                    image = ds.child("image").getValue(true).toString()
+                                    phone = ds.child("phone").getValue(true).toString()
+
+                                }
+
+                            }
 
 
-                    })
+                        })
 
 
-                    tax = (itemTotal * 18) / 100
+                        tax = (itemTotal * 18) / 100
 
+                        res_name_cart.text = name
 
-                    total_price_cart.text = itemTotal.toString()
-                    taxes_cart.text = tax.toString()
+                        total_price_cart.text = itemTotal.toString()
+                        taxes_cart.text = tax.toString()
 
-                    total_payable_price_cart.text = (itemTotal + tax).toString()
-                    total_cost_cart.text = total_payable_price_cart.text
+                        total_payable_price_cart.text = (itemTotal + tax).toString()
+                        total_cost_cart.text = total_payable_price_cart.text
+                    }
 
                 }, {
                     Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()

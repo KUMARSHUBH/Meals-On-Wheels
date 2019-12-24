@@ -32,6 +32,7 @@ class FoodFragment : Fragment() {
     private lateinit var optionsAdapter: OptionsAdapter
     private lateinit var orderSharedPreferences: SharedPreferences
     private lateinit var restaurantReference: DatabaseReference
+    private lateinit var snackbar: Snackbar
 
     companion object {
 
@@ -160,46 +161,58 @@ class FoodFragment : Fragment() {
     }
 
 
+
     override fun onResume() {
         super.onResume()
 
         val a = orderSharedPreferences.getString("resId", "")
-        if (a != null || a != "") {
+        if (a != null) {
 
-            var res: String
-            restaurantReference = FirebaseDatabase.getInstance().getReference("restaurant/${a}")
-            restaurantReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError) {
+            if(a != ""){
+                var res: String
+                restaurantReference = FirebaseDatabase.getInstance().getReference("restaurant/${a}")
+                restaurantReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
 
-                }
-
-                override fun onDataChange(p0: DataSnapshot) {
-
-                    res = p0.child("name").value.toString()
-                    Snackbar.make(test, res, Snackbar.LENGTH_INDEFINITE).apply {
-                        view.layoutParams =
-                            (view.layoutParams as CoordinatorLayout.LayoutParams).apply {
-                                setMargins(
-                                    leftMargin,
-                                    topMargin,
-                                    rightMargin,
-                                    bottomMargin
-                                )
-
-                            }
                     }
-                        .setActionTextColor(resources.getColor(android.R.color.white))
 
-                        .setAction("View") {
-                            Navigation.findNavController(it).navigate(R.id.action_navigation_food_to_navigation_cart)
+                    override fun onDataChange(p0: DataSnapshot) {
+
+                        res = p0.child("name").value.toString()
+                        snackbar = Snackbar.make(test, res, Snackbar.LENGTH_INDEFINITE)
+                        snackbar.apply {
+                            view.layoutParams =
+                                (view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                                    setMargins(
+                                        leftMargin,
+                                        topMargin,
+                                        rightMargin,
+                                        bottomMargin
+                                    )
+
+                                }
                         }
-                        .show()
-                }
+                            .setActionTextColor(resources.getColor(android.R.color.white))
+
+                            .setAction("View") {
+                                Navigation.findNavController(it).navigate(R.id.action_navigation_food_to_navigation_cart)
+                            }
+                            .show()
+                    }
 
 
-            })
+                })
 
+            }
 
         }
+
+        try {
+            snackbar.dismiss()
+        }
+        catch (e: Exception){
+
+        }
+
     }
 }
