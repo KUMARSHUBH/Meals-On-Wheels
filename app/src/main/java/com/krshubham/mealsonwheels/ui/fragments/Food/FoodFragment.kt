@@ -1,16 +1,19 @@
 package com.krshubham.mealsonwheels.ui.fragments.Food
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.*
+import com.krshubham.mealsonwheels.R
 import com.krshubham.mealsonwheels.R.layout.fragment_food
 import com.krshubham.mealsonwheels.adapter.BestRestaurantAdapter
 import com.krshubham.mealsonwheels.adapter.CategoryViewAdapter
@@ -27,6 +30,8 @@ class FoodFragment : Fragment() {
     private lateinit var categoryViewAdapter: CategoryViewAdapter
     private lateinit var bestRestaurantAdapter: BestRestaurantAdapter
     private lateinit var optionsAdapter: OptionsAdapter
+    private lateinit var orderSharedPreferences: SharedPreferences
+    private lateinit var restaurantReference: DatabaseReference
 
     companion object {
 
@@ -46,6 +51,7 @@ class FoodFragment : Fragment() {
 
         val restaurantReference = FirebaseDatabase.getInstance().getReference("restaurant")
         val categoryReference = FirebaseDatabase.getInstance().getReference("category")
+        orderSharedPreferences = context?.getSharedPreferences("OrderRestId", Context.MODE_PRIVATE)!!
 
         categoryList = ArrayList()
         restaurantlist = ArrayList()
@@ -151,6 +157,49 @@ class FoodFragment : Fragment() {
 
         restaurant_recycler_view.isNestedScrollingEnabled = true
 
+    }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        val a = orderSharedPreferences.getString("resId", "")
+        if (a != null || a != "") {
+
+            var res: String
+            restaurantReference = FirebaseDatabase.getInstance().getReference("restaurant/${a}")
+            restaurantReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+
+                    res = p0.child("name").value.toString()
+                    Snackbar.make(test, res, Snackbar.LENGTH_INDEFINITE).apply {
+                        view.layoutParams =
+                            (view.layoutParams as CoordinatorLayout.LayoutParams).apply {
+                                setMargins(
+                                    leftMargin,
+                                    topMargin,
+                                    rightMargin,
+                                    bottomMargin
+                                )
+
+                            }
+                    }
+                        .setActionTextColor(resources.getColor(android.R.color.white))
+
+                        .setAction("View") {
+                            Navigation.findNavController(it).navigate(R.id.action_navigation_food_to_navigation_cart)
+                        }
+                        .show()
+                }
+
+
+            })
+
+
+        }
     }
 }

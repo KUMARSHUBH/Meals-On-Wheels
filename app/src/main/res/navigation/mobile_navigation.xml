@@ -9,7 +9,11 @@
         android:id="@+id/navigation_food"
         android:name="com.krshubham.mealsonwheels.ui.fragments.Food.FoodFragment"
         android:label="@string/title_food"
-        tools:layout="@layout/fragment_food" />
+        tools:layout="@layout/fragment_food" >
+        <action
+            android:id="@+id/action_navigation_food_to_navigation_cart"
+            app:destination="@+id/navigation_cart" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"

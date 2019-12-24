@@ -40,8 +40,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var geocoder: Geocoder
     private lateinit var addresses: List<Address>
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var restaurantReference: DatabaseReference
     private lateinit var firebaseAuth: FirebaseAuth
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +50,9 @@ class HomeActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
+
+
+
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -64,6 +67,8 @@ class HomeActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         databaseReference =
             FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
+
+
 
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -280,6 +285,5 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-
 
 }
