@@ -63,7 +63,7 @@ class CartFragment : Fragment() {
     private lateinit var userName: String
     private lateinit var phone_no: String
     private lateinit var sharedPreferences: SharedPreferences
-    private var idFromFood: String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,8 +72,12 @@ class CartFragment : Fragment() {
     ): View? {
         cartViewModel =
             ViewModelProviders.of(this).get(CartViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_cart, container, false)
-        return root
+
+        cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(context!!).cartDao())
+        compositeDisposable = CompositeDisposable()
+        sharedPreferences = context?.getSharedPreferences("OrderRestId", Context.MODE_PRIVATE)!!
+
+        return inflater.inflate(R.layout.fragment_cart, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -89,11 +93,9 @@ class CartFragment : Fragment() {
         var image = ""
         var rating = ""
 
-        cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(context!!).cartDao())
-        compositeDisposable = CompositeDisposable()
 
 
-        sharedPreferences = context?.getSharedPreferences("OrderRestId", Context.MODE_PRIVATE)!!
+
         change_order_info_cart.setOnClickListener {
 
             val intent = Intent(this.activity, UserDetail::class.java)
@@ -106,17 +108,6 @@ class CartFragment : Fragment() {
         databaseReference =
             FirebaseDatabase.getInstance().getReference("user/${firebaseAuth.currentUser?.uid}")
 
-
-        res_name_cart.setOnClickListener {
-
-            val intent = Intent(this.context, RestaurantDetailActivity::class.java)
-            intent.putExtra("id", id)
-            intent.putExtra("name", name)
-            intent.putExtra("phone", phone)
-            intent.putExtra("image", image)
-            intent.putExtra("rating", rating)
-            startActivity(intent)
-        }
 
 
 
@@ -231,63 +222,67 @@ class CartFragment : Fragment() {
                     val adapter = CartListAdapter(context!!, it)
                     orders_recycler_view_cart.adapter = adapter
 
-                    if (it.isEmpty() || it != null) {
-
+                    if (it.isNullOrEmpty())
                         sharedPreferences.edit().putString("resId", "").apply()
 
-                    } else {
+                    var idFromFood: String = ""
+                    itemTotal = 0.0
+                    it?.forEach { cartItem ->
 
-                        itemTotal = 0.0
-                        it?.forEach { cartItem ->
 
+                        idFromFood = "-${cartItem.foodId.substringAfter("-")}"
+                        val total = (cartItem.quantity) * (cartItem.price)
+                        itemTotal += total
+                    }
 
-                            if (idFromFood == null) {
+                    resReference =
+                        FirebaseDatabase.getInstance().getReference("restaurant/$idFromFood")
 
-                                idFromFood = "-${cartItem.foodId.substringAfter("-")}"
+                    resReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
+
+                        }
+
+                        override fun onDataChange(ds: DataSnapshot) {
+
+                            val restaurant = Restaurant()
+                            restaurant.apply {
+
+                                id = ds.child("id").getValue(true).toString()
+                                name = ds.child("name").getValue(true).toString()
+                                rating = ds.child("rating").getValue(true).toString()
+                                image = ds.child("image").getValue(true).toString()
+                                phone = ds.child("phone").getValue(true).toString()
+
                             }
-                            val total = (cartItem.quantity) * (cartItem.price)
-                            itemTotal += total
+
+
+                            res_name_cart.text = name
                         }
 
 
-                        resReference =
-                            FirebaseDatabase.getInstance().getReference("restaurant/$idFromFood")
+                    })
 
 
-                        resReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(p0: DatabaseError) {
+                    res_name_cart.setOnClickListener {
 
-                            }
-
-                            override fun onDataChange(ds: DataSnapshot) {
-
-                                val restaurant = Restaurant()
-                                restaurant.apply {
-
-                                    id = ds.child("id").getValue(true).toString()
-                                    name = ds.child("name").getValue(true).toString()
-                                    rating = ds.child("rating").getValue(true).toString()
-                                    image = ds.child("image").getValue(true).toString()
-                                    phone = ds.child("phone").getValue(true).toString()
-
-                                }
-
-                            }
-
-
-                        })
-
-
-                        tax = (itemTotal * 18) / 100
-
-                        res_name_cart.text = name
-
-                        total_price_cart.text = itemTotal.toString()
-                        taxes_cart.text = tax.toString()
-
-                        total_payable_price_cart.text = (itemTotal + tax).toString()
-                        total_cost_cart.text = total_payable_price_cart.text
+                        val intent = Intent(this.context, RestaurantDetailActivity::class.java)
+                        intent.putExtra("id", id)
+                        intent.putExtra("name", name)
+                        intent.putExtra("phone", phone)
+                        intent.putExtra("image", image)
+                        intent.putExtra("rating", rating)
+                        startActivity(intent)
                     }
+                    tax = (itemTotal * 18) / 100
+
+
+
+                    total_price_cart.text = itemTotal.toString()
+                    taxes_cart.text = tax.toString()
+
+                    total_payable_price_cart.text = (itemTotal + tax).toString()
+                    total_cost_cart.text = total_payable_price_cart.text
 
                 }, {
                     Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
