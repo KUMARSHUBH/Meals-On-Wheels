@@ -2,6 +2,7 @@ package com.krshubham.mealsonwheels.ui.fragments.cart
 
 import android.Manifest
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,6 +10,8 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +38,7 @@ import com.krshubham.mealsonwheels.db.CartDataSourceImpl
 import com.krshubham.mealsonwheels.db.CartDatabase
 import com.krshubham.mealsonwheels.models.Restaurant
 import com.krshubham.mealsonwheels.models.User
+import com.krshubham.mealsonwheels.ui.ChoosePaymentModeActivity
 import com.krshubham.mealsonwheels.ui.LocationDetail
 import com.krshubham.mealsonwheels.ui.RestaurantDetailActivity
 import com.krshubham.mealsonwheels.ui.UserDetail
@@ -236,7 +240,7 @@ class CartFragment : Fragment() {
                         val adapter = CartListAdapter(context!!, it)
                         orders_recycler_view_cart.adapter = adapter
 
-                        if (it.isNullOrEmpty()){
+                        if (it.isNullOrEmpty()) {
                             sharedPreferences.edit().putString("resId", "").apply()
 
                         }
@@ -277,7 +281,11 @@ class CartFragment : Fragment() {
 
                                 res_name_cart.text = name
 
-                                if(context?.getSharedPreferences("CartEmpty",Context.MODE_PRIVATE)?.getBoolean("empty",false)!!){
+                                if (context?.getSharedPreferences(
+                                        "CartEmpty",
+                                        Context.MODE_PRIVATE
+                                    )?.getBoolean("empty", false)!!
+                                ) {
 
                                     empty_cart.visibility = View.VISIBLE
 
@@ -318,8 +326,18 @@ class CartFragment : Fragment() {
                     })
             )
 
-        }
+            payment_options.setOnClickListener {
 
+                val intent = Intent(this.context,ChoosePaymentModeActivity::class.java)
+                startActivityForResult(intent,0)
+            }
+
+            pay.setOnClickListener {
+
+                payUsingUpi(total_cost_cart.text.toString(),"9162169596@paytm","Meals On Wheels","Payment at $name")
+            }
+
+        }
         else {
 
             geocoder = Geocoder(context, Locale.getDefault())
@@ -341,6 +359,73 @@ class CartFragment : Fragment() {
 
     }
 
+
+    private fun payUsingUpi(amount: String, upiId: String, name: String, note: String) {
+
+        val uri = Uri.parse("upi://pay").buildUpon()
+            .appendQueryParameter("pa", upiId)
+            .appendQueryParameter("pn", name)
+            .appendQueryParameter("tn", note)
+            .appendQueryParameter("am", amount)
+            .appendQueryParameter("cu", "INR")
+            .build()
+
+        val upiPayIntent = Intent(Intent.ACTION_VIEW)
+        upiPayIntent.data = uri
+
+        val chooser = Intent.createChooser(upiPayIntent, "Pay with")
+
+        if (null != chooser.resolveActivity(context?.packageManager!!)) {
+            startActivityForResult(chooser, 0)
+        } else {
+            Toast.makeText(
+                this.context,
+                "No UPI app found, please install one to continue",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+
+            0 -> {
+
+                if ((RESULT_OK == resultCode) || (resultCode == 11)) {
+                    if (data != null) {
+                        val trxt = data.getStringExtra("response")
+                        val dataList = ArrayList<String>()
+                        dataList.add(trxt!!)
+//                        upiPaymentDataOperation(dataList)
+                    } else {
+
+                        val dataList = ArrayList<String>()
+                        dataList.add("nothing")
+//                        upiPaymentDataOperation(dataList)
+                    }
+                } else {
+
+                    val dataList = ArrayList<String>()
+                    dataList.add("nothing")
+//                    upiPaymentDataOperation(dataList)
+                }
+
+            }
+        }
+    }
+
+//    private fun upiPaymentDataOperation(data: ArrayList<String>) {
+//
+//        if(isConnectionAvailable(context!!)){
+//
+//            var str: String? = data[0]
+//            var paymentCancel = ""
+//            if(str == null)
+//                str = "discard"
+//        }
+//    }
 
     private fun fetchLocation() {
 
@@ -440,6 +525,20 @@ class CartFragment : Fragment() {
                 // Ignore all other requests.
             }
         }
+    }
+
+    private fun isConnectionAvailable(context: Context): Boolean {
+
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = connectivityManager.activeNetworkInfo
+        if (netInfo != null && netInfo.isConnected
+            && netInfo.isConnectedOrConnecting
+            && netInfo.isAvailable
+        ) {
+            return true
+        }
+        return false
     }
 
     override fun onResume() {

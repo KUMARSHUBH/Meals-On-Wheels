@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.UserDetail"></activity>
+        <activity android:name=".ui.ChoosePaymentModeActivity"></activity>
+        <activity android:name=".ui.UserDetail" />
         <activity android:name=".OrderActivity" />
         <activity android:name=".ui.RestaurantDetailActivity" />
         <activity android:name=".ui.YTPlayer" />

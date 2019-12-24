@@ -293,6 +293,11 @@
                 android:paddingBottom="8dp"
                 android:weightSum="10">
 
+                <LinearLayout
+                    android:id="@+id/payment_options"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -300,7 +305,14 @@
                     android:layout_weight="5"
                     android:text="PAY USING" />
 
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                </LinearLayout>
+
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/pay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
