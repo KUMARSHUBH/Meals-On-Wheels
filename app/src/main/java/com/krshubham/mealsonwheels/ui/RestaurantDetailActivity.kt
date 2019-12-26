@@ -1,6 +1,7 @@
 package com.krshubham.mealsonwheels.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_restaurant_detail.*
+import kotlinx.android.synthetic.main.cart_bottom_sheet.*
 
 class RestaurantDetailActivity : AppCompatActivity() {
 
@@ -46,6 +48,11 @@ class RestaurantDetailActivity : AppCompatActivity() {
         var currentResId: String
         compositeDisposable = CompositeDisposable()
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(this).cartDao())
+
+        pay_bottom_sheet.setOnClickListener{
+
+            startActivity(Intent(this,OrderTrackingActivity::class.java))
+        }
 
         compositeDisposable.add(cartDataSource.getAllCartItems()
             .subscribeOn(Schedulers.io())

@@ -38,10 +38,7 @@ import com.krshubham.mealsonwheels.db.CartDataSourceImpl
 import com.krshubham.mealsonwheels.db.CartDatabase
 import com.krshubham.mealsonwheels.models.Restaurant
 import com.krshubham.mealsonwheels.models.User
-import com.krshubham.mealsonwheels.ui.ChoosePaymentModeActivity
-import com.krshubham.mealsonwheels.ui.LocationDetail
-import com.krshubham.mealsonwheels.ui.RestaurantDetailActivity
-import com.krshubham.mealsonwheels.ui.UserDetail
+import com.krshubham.mealsonwheels.ui.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -70,7 +67,7 @@ class CartFragment : Fragment() {
     private lateinit var phone_no: String
     private lateinit var sharedPreferences: SharedPreferences
     private var empty: Boolean = false
-
+    private var resAddress = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,8 +101,8 @@ class CartFragment : Fragment() {
 
         if (!empty) {
 
-            var itemTotal: Double
-            var tax: Double
+            var itemTotal = 0.0
+            var tax = 0.0
 
 
             var name = ""
@@ -231,6 +228,7 @@ class CartFragment : Fragment() {
 
             })
 
+            var idFromFood = ""
 
             compositeDisposable.add(
                 cartDataSource.getAllCartItems()
@@ -247,7 +245,7 @@ class CartFragment : Fragment() {
 
                         empty_cart.visibility = View.GONE
 
-                        var idFromFood = ""
+//                        var idFromFood = ""
                         itemTotal = 0.0
                         it?.forEach { cartItem ->
 
@@ -275,6 +273,7 @@ class CartFragment : Fragment() {
                                     rating = ds.child("rating").getValue(true).toString()
                                     image = ds.child("image").getValue(true).toString()
                                     phone = ds.child("phone").getValue(true).toString()
+                                    resAddress = ds.child("address").value.toString()
 
                                 }
 
@@ -328,17 +327,55 @@ class CartFragment : Fragment() {
 
             payment_options.setOnClickListener {
 
-                val intent = Intent(this.context,ChoosePaymentModeActivity::class.java)
-                startActivityForResult(intent,0)
+                val intent = Intent(this.context, ChoosePaymentModeActivity::class.java)
+                startActivityForResult(intent, 0)
             }
 
             pay.setOnClickListener {
 
-                payUsingUpi(total_cost_cart.text.toString(),"9162169596@paytm","Meals On Wheels","Payment at $name")
+                databaseReference = FirebaseDatabase.getInstance().getReference("orders")
+                val key =
+                    databaseReference.child("${FirebaseAuth.getInstance().currentUser?.uid}").push()
+
+                compositeDisposable.add(cartDataSource.getAllCartItems()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { cartList ->
+
+                        cartList.forEach {
+
+                            key.child(it.foodId).setValue(it.quantity)
+
+                        }
+                    })
+                //                payUsingUpi(total_cost_cart.text.toString(),"9162169596@paytm","Meals On Wheels","Payment at $name")
+                startActivity(Intent(this.context, OrderTrackingActivity::class.java))
+
+
+
+                key.child("total_cost").setValue(itemTotal)
+                key.child("tax").setValue(tax)
+                key.child("date")
+                    .setValue(Calendar.getInstance().time.toString().substringBefore("G"))
+                key.child("phone")
+                    .setValue(usr_email_phone_cart.text.toString().substringAfter(","))
+                key
+                    .child("delivery_address").setValue(delivery_address_cart.text.toString())
+                key.child("res_name").setValue(res_name_cart.text.toString())
+                key.child("res_address").setValue(resAddress)
+                key.child("res_id").setValue(idFromFood)
+
+
+                compositeDisposable.add(cartDataSource.cleanCart().subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe{
+
+                    })
+
+
             }
 
-        }
-        else {
+        } else {
 
             geocoder = Geocoder(context, Locale.getDefault())
             fusedLocationClient = FusedLocationProviderClient(context!!)
@@ -415,17 +452,6 @@ class CartFragment : Fragment() {
             }
         }
     }
-
-//    private fun upiPaymentDataOperation(data: ArrayList<String>) {
-//
-//        if(isConnectionAvailable(context!!)){
-//
-//            var str: String? = data[0]
-//            var paymentCancel = ""
-//            if(str == null)
-//                str = "discard"
-//        }
-//    }
 
     private fun fetchLocation() {
 
@@ -556,7 +582,7 @@ class CartFragment : Fragment() {
                     val user = p0.getValue(User::class.java)
                     if (user != null) {
                         delivery_address_cart.text =
-                            geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
+                            "${user.fullAddress}, ${geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality}"
 
                         userName = user.name
                         phone_no = user.phone!!

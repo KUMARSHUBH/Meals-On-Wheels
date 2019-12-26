@@ -178,6 +178,11 @@ class HomeActivity : AppCompatActivity() {
                 firebaseAuth.signOut()
                 startActivity(Intent(this, UserLoginActivity::class.java))
             }
+            else if(it.itemId == R.id.order){
+
+
+                startActivity(Intent(this,OrderListActivity::class.java))
+            }
             return@setNavigationItemSelectedListener true
 
         }
@@ -285,5 +290,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
 
 }

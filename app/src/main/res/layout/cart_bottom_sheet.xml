@@ -276,6 +276,7 @@
                                     android:text="PAY USING" />
 
                                 <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/pay_bottom_sheet"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="5"

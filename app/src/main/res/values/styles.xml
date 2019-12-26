@@ -28,4 +28,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+
+    <style name="AppTheme.OrderTrackingActivity" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">#ffffff</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
 </resources>
