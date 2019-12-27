@@ -8,5 +8,6 @@ data class Restaurant(
     var rating: String = "",
     var phone: String = "",
     var image: String = "",
-    var perPersonCost: String = ""
+    var perPersonCost: String = "",
+    var address: String = ""
 )

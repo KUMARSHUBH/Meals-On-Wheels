@@ -19,7 +19,7 @@ class OrderListAdapter(val context: Context, val ordersList: List<String>) :
     lateinit var databaseReference: DatabaseReference
     lateinit var resReference: DatabaseReference
 
-    class OrderListViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class OrderListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         var image = view.order_item_image
         var name = view.order_item_name
@@ -55,27 +55,30 @@ class OrderListAdapter(val context: Context, val ordersList: List<String>) :
                     holder.orderCard.setOnClickListener {
 
                         val intent = Intent(context, OrderDetailActivity::class.java)
-                        intent.putExtra("orderID",ordersList[position])
+                        intent.putExtra("orderID", ordersList[position])
                         context.startActivity(intent)
                     }
 
                     holder.date.text = p0.child("date").value.toString()
-                    holder.amount.text = (p0.child("tax").value.toString().toDouble() + p0.child("total_cost").value.toString().toDouble()).toString()
+                    holder.amount.text =
+                        (p0.child("tax").value.toString().toDouble() + p0.child("total_cost").value.toString().toDouble()).toString()
                     holder.name.text = p0.child("res_name").value.toString()
 
                     holder.image.clipToOutline = true
-                    resReference.child(p0.child("res_id").value.toString()).addListenerForSingleValueEvent(object : ValueEventListener{
-                        override fun onCancelled(p0: DatabaseError) {
+                    resReference.child(p0.child("res_id").value.toString())
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(p0: DatabaseError) {
 
-                        }
+                            }
 
-                        override fun onDataChange(p0: DataSnapshot) {
+                            override fun onDataChange(p0: DataSnapshot) {
 
-                            Picasso.get().load(p0.child("image").value.toString()).into(holder.image)
-                        }
+                                Picasso.get().load(p0.child("image").value.toString())
+                                    .placeholder(R.drawable.food_background).into(holder.image)
+                            }
 
 
-                    })
+                        })
 
                 }
 

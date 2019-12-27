@@ -36,7 +36,7 @@ class VideoAdapter(val context: Context,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        Picasso.get().load(results[position].snippet.thumbnails.medium.url).into(holder.image)
+        Picasso.get().load(results[position].snippet.thumbnails.medium.url).placeholder(R.drawable.food_background).into(holder.image)
         holder.image.clipToOutline = true
         holder.title.text = results[position].snippet.title
 

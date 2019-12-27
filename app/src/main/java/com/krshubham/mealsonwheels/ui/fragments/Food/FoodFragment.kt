@@ -84,6 +84,7 @@ class FoodFragment : Fragment() {
                         rating = ds.child("rating").getValue(true).toString()
                         image = ds.child("image").getValue(true).toString()
                         phone = ds.child("phone").getValue(true).toString()
+                        address = ds.child("address").getValue(true).toString()
 
                     }
                     restaurantlist.add(restaurant)

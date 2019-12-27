@@ -25,7 +25,8 @@ class RestaurantViewAdapter(
     private val categoryList: List<Category>?
 ) : RecyclerView.Adapter<RestaurantViewAdapter.ViewHolder>() {
 
-    val pos = Random.nextInt(4,8)
+    val pos = Random.nextInt(4, 8)
+    var resAddress: String = ""
 
     private object ItemType {
 
@@ -40,7 +41,7 @@ class RestaurantViewAdapter(
         //        var resCategories: TextView
         var resPerPersonCost: TextView? = view.restaurant_per_person_cost
         var resRating: TextView? = view.rating
-        var cat : RecyclerView? = view.category_recycler_view
+        var cat: RecyclerView? = view.category_recycler_view
         var root: ConstraintLayout? = view.root
     }
 
@@ -58,7 +59,7 @@ class RestaurantViewAdapter(
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = (restaurantList?.size) ?:0
+    override fun getItemCount() = (restaurantList?.size) ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
@@ -67,6 +68,7 @@ class RestaurantViewAdapter(
             holder.resName?.text = restaurantList?.get(position)?.name.toString()
             holder.resRating?.text = restaurantList?.get(position)?.rating.toString()
             Picasso.get().load(restaurantList?.get(position)?.image.toString())
+                .placeholder(R.drawable.food_background)
                 .into(holder.resImage)
             holder.resImage?.clipToOutline = true
             holder.cat = null
@@ -74,20 +76,20 @@ class RestaurantViewAdapter(
 
             holder.root?.setOnClickListener {
 
-                val intent = Intent(context,RestaurantDetailActivity::class.java)
-                intent.putExtra("id",restaurantList?.get(position)?.id.toString())
-                intent.putExtra("name",restaurantList?.get(position)?.name.toString())
-                intent.putExtra("phone",restaurantList?.get(position)?.phone.toString())
-                intent.putExtra("image",restaurantList?.get(position)?.image.toString())
-                intent.putExtra("rating",restaurantList?.get(position)?.rating.toString())
+                val intent = Intent(context, RestaurantDetailActivity::class.java)
+                intent.putExtra("id", restaurantList?.get(position)?.id.toString())
+                intent.putExtra("name", restaurantList?.get(position)?.name.toString())
+                intent.putExtra("phone", restaurantList?.get(position)?.phone.toString())
+                intent.putExtra("image", restaurantList?.get(position)?.image.toString())
+                intent.putExtra("rating", restaurantList?.get(position)?.rating.toString())
+                intent.putExtra("resAddress", restaurantList?.get(position)?.address.toString())
                 context.startActivity(intent)
             }
-        }
+        } else {
 
-        else{
-
-            holder.cat?.adapter = CategoryViewAdapter(context,categoryList)
-            holder.cat?.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+            holder.cat?.adapter = CategoryViewAdapter(context, categoryList)
+            holder.cat?.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
     }

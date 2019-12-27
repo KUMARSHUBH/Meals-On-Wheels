@@ -28,8 +28,7 @@ import com.krshubham.mealsonwheels.db.CartDataSource
 import com.krshubham.mealsonwheels.db.CartDataSourceImpl
 import com.krshubham.mealsonwheels.db.CartDatabase
 import com.krshubham.mealsonwheels.models.User
-import com.krshubham.mealsonwheels.ui.LocationDetail
-import com.krshubham.mealsonwheels.ui.UserDetail
+import com.krshubham.mealsonwheels.ui.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -50,6 +49,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var addresses: List<Address>
     private lateinit var databaseReference: DatabaseReference
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var resReference: DatabaseReference
 
     private lateinit var userName: String
     private lateinit var phone_no: String
@@ -63,8 +63,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var itemTotal: Double
-        var tax: Double
+        var itemTotal = 0.0
+        var tax = 0.0
 
         cartDataSource = CartDataSourceImpl(CartDatabase.getInstance(context!!).cartDao())
         compositeDisposable = CompositeDisposable()
@@ -89,7 +89,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         special_instruction_text.setOnClickListener {
 
             val alertDialog = AlertDialog.Builder(this.context!!).create()
-            val dialogView = layoutInflater.inflate(R.layout.cooking_instruction_dialog_layout,null)
+            val dialogView =
+                layoutInflater.inflate(R.layout.cooking_instruction_dialog_layout, null)
             alertDialog.setView(dialogView)
             alertDialog.show()
 
@@ -108,7 +109,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
                 alertDialog.dismiss()
             }
-
 
 
         }
@@ -184,35 +184,92 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         })
 
 
-        compositeDisposable.add(cartDataSource.getAllCartItems()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                val adapter = CartListAdapter(context!!, it)
-                orders_recycler_view.adapter = adapter
+        compositeDisposable.add(
+            cartDataSource.getAllCartItems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val adapter = CartListAdapter(context!!, it)
+                    orders_recycler_view.adapter = adapter
 
-                itemTotal = 0.0
-                it.forEach { cartItem ->
+                    itemTotal = 0.0
+                    it.forEach { cartItem ->
 
-                    val total = (cartItem.quantity) * (cartItem.price)
-                    itemTotal += total
-                }
-
-
-                tax = (itemTotal * 18) / 100
+                        val total = (cartItem.quantity) * (cartItem.price)
+                        itemTotal += total
+                    }
 
 
-                total_price.text = itemTotal.toString()
-                taxes.text = tax.toString()
+                    tax = (itemTotal * 18) / 100
 
-                total_payable_price.text = (itemTotal + tax).toString()
-                total_cost.text = total_payable_price.text
 
-            }, {
-                Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-            })
+                    total_price.text = itemTotal.toString()
+                    taxes.text = tax.toString()
+
+                    total_payable_price.text = (itemTotal + tax).toString()
+                    total_cost.text = total_payable_price.text
+
+                }, {
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                })
         )
 
+
+        pay_options.setOnClickListener {
+
+            val intent = Intent(this.context, ChoosePaymentModeActivity::class.java)
+            startActivityForResult(intent, 0)
+        }
+
+        pay_bottom_sheet.setOnClickListener {
+
+
+            databaseReference = FirebaseDatabase.getInstance().getReference("orders")
+            val key =
+                databaseReference.child("${FirebaseAuth.getInstance().currentUser?.uid}").push()
+
+            var resId = ""
+            var resAddress = ""
+            compositeDisposable.add(cartDataSource.getAllCartItems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { cartList ->
+
+                    cartList.forEach {
+
+                        key.child(it.foodId).setValue(it.quantity)
+
+                    }
+
+
+                })
+            //                payUsingUpi(total_cost_cart.text.toString(),"9162169596@paytm","Meals On Wheels","Payment at $name")
+            startActivity(Intent(this.context, OrderTrackingActivity::class.java))
+
+
+
+            key.child("total_cost").setValue(itemTotal)
+            key.child("tax").setValue(tax)
+            key.child("date")
+                .setValue(Calendar.getInstance().time.toString().substringBefore("G"))
+            key.child("phone")
+                .setValue(usr_email_phone.text.toString().substringAfter(","))
+            key
+                .child("delivery_address").setValue(delivery_address.text.toString())
+
+            key.child("res_address").setValue((this.activity as RestaurantDetailActivity).intent.getStringExtra("resAddress"))
+            key.child("res_id").setValue((this.activity as RestaurantDetailActivity).intent.getStringExtra("id"))
+            key.child("res_name").setValue((this.activity as RestaurantDetailActivity).intent.getStringExtra("name"))
+
+
+            compositeDisposable.add(cartDataSource.cleanCart().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+
+                })
+
+
+        }
 
     }
 

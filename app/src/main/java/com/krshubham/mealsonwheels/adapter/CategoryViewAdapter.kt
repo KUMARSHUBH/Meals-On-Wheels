@@ -35,7 +35,7 @@ class CategoryViewAdapter(
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
 
         holder.catName.text = categoryList?.get(position)?.name
-        Picasso.get().load(categoryList?.get(position)?.image).into(holder.catImage)
+        Picasso.get().load(categoryList?.get(position)?.image).placeholder(R.drawable.food_background).into(holder.catImage)
         holder.catImage.clipToOutline= true
     }
 }

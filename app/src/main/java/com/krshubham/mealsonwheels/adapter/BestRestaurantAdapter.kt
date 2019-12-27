@@ -13,11 +13,13 @@ import com.krshubham.mealsonwheels.models.Restaurant
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.square_restaurant_layout.view.*
 
-class BestRestaurantAdapter(val context: Context,
-                            private val bestRestaurantList: List<Restaurant>?) : RecyclerView.Adapter<BestRestaurantAdapter.ViewHolder>() {
+class BestRestaurantAdapter(
+    val context: Context,
+    private val bestRestaurantList: List<Restaurant>?
+) : RecyclerView.Adapter<BestRestaurantAdapter.ViewHolder>() {
 
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 
         var image: ImageView = view.restaurant_big_image
@@ -26,7 +28,8 @@ class BestRestaurantAdapter(val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view =  LayoutInflater.from(context).inflate(R.layout.square_restaurant_layout,parent,false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.square_restaurant_layout, parent, false)
         return ViewHolder(view)
     }
 
@@ -34,7 +37,8 @@ class BestRestaurantAdapter(val context: Context,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        Picasso.get().load(bestRestaurantList?.get(position)?.image).into(holder.image)
+        Picasso.get().load(bestRestaurantList?.get(position)?.image)
+            .placeholder(R.drawable.food_background).into(holder.image)
         holder.image.clipToOutline = true
         holder.name.text = bestRestaurantList?.get(position)?.name
     }

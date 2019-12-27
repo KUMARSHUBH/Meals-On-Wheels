@@ -275,6 +275,7 @@ class CartFragment : Fragment() {
                                     phone = ds.child("phone").getValue(true).toString()
                                     resAddress = ds.child("address").value.toString()
 
+                                    address = ds.child("address").value.toString()
                                 }
 
 
@@ -308,6 +309,7 @@ class CartFragment : Fragment() {
                             intent.putExtra("phone", phone)
                             intent.putExtra("image", image)
                             intent.putExtra("rating", rating)
+                            intent.putExtra("resAddress",resAddress)
                             startActivity(intent)
                         }
                         tax = (itemTotal * 18) / 100

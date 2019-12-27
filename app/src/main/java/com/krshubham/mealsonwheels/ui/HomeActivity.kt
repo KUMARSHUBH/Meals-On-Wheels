@@ -82,8 +82,17 @@ class HomeActivity : AppCompatActivity() {
                     location_text.text =
                         geocoder.getFromLocation(user.lat, user.lng, 1)[0].subLocality
 
-                    username.text = user.name
-                    user_email.text = user.email
+                    if(user!= null){
+
+                        username.text = user.name
+                        user_email.text = user.email
+                    }
+                    else{
+
+                        username.text = ""
+                        user_email.text = ""
+                        Toast.makeText(this@HomeActivity,"Error",Toast.LENGTH_SHORT).show()
+                    }
 
 
                 }

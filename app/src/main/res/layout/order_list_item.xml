@@ -30,14 +30,12 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/images_background"
-                android:src="@drawable/ic_phone_in_talk_black_24dp" />
+                android:src="@drawable/food_background" />
 
             <TextView
                 android:id="@+id/order_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sonali Fast Food"
                 android:layout_marginStart="16dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
@@ -60,7 +58,6 @@
             android:id="@+id/order_item_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="03 Dec 2019"
             android:textColor="@android:color/black"
             android:layout_marginBottom="8dp"/>
 
@@ -73,8 +70,7 @@
             android:id="@+id/order_item_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="Rs.5.00"/>
+            android:textColor="@android:color/black" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

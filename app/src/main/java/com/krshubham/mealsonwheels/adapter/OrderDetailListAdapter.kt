@@ -41,11 +41,11 @@ class OrderDetailListAdapter(
         holder.perItemCost?.text = foodPricelist[position]
         try {
 
-            holder.totalItemCost?.text = (foodPricelist[position].toDouble() * foodQuantityList[position].toString().toDouble()).toString()
-        }
-        catch (e: Exception){
+            holder.totalItemCost?.text =
+                (foodPricelist[position].toDouble() * foodQuantityList[position].toString().toDouble()).toString()
+        } catch (e: Exception) {
 
-            Toast.makeText(context,e.message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
         }
 
 
