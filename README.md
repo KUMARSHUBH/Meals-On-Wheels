@@ -2,7 +2,7 @@
 
 Online food ordering app for android.
 
-<img src = "https://user-images.githubusercontent.com/28972052/76162754-8c805300-6166-11ea-8238-c7df41ffb06d.jpeg" height = "200" weight = "50">
+<img src = "https://user-images.githubusercontent.com/28972052/76162754-8c805300-6166-11ea-8238-c7df41ffb06d.jpeg" height = "200" weight = "80">
 
 ![Screenshot_20200308-170825](https://user-images.githubusercontent.com/28972052/76162786-b2a5f300-6166-11ea-9702-f1dd7250dda7.jpeg)
 
